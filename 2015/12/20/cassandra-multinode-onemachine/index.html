@@ -1,0 +1,739 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Cassandra," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="Just a toy…
+
+修改host表
+1234sudo vim /etc/hosts127.0.0.1 127.0.0.2127.0.0.1 127.0.0.3127.0.0.1 127.0.0.4
+
+下载Cassandra tar包解压到三个不同的目录，每个目录对应一个节点node1  127.0.0.2 cassandra-node1node2  127.0.0.3 cassandra-n">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cassandra 单机多节点安装">
+<meta property="og:url" content="http://kenshinn.net/2015/12/20/cassandra-multinode-onemachine/index.html">
+<meta property="og:site_name" content="剣の心 の Blog">
+<meta property="og:description" content="Just a toy…
+
+修改host表
+1234sudo vim /etc/hosts127.0.0.1 127.0.0.2127.0.0.1 127.0.0.3127.0.0.1 127.0.0.4
+
+下载Cassandra tar包解压到三个不同的目录，每个目录对应一个节点node1  127.0.0.2 cassandra-node1node2  127.0.0.3 cassandra-n">
+<meta property="og:updated_time" content="2016-05-22T08:57:57.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Cassandra 单机多节点安装">
+<meta name="twitter:description" content="Just a toy…
+
+修改host表
+1234sudo vim /etc/hosts127.0.0.1 127.0.0.2127.0.0.1 127.0.0.3127.0.0.1 127.0.0.4
+
+下载Cassandra tar包解压到三个不同的目录，每个目录对应一个节点node1  127.0.0.2 cassandra-node1node2  127.0.0.3 cassandra-n">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '剣の心'
+    }
+  };
+</script>
+
+  <title> Cassandra 单机多节点安装 | 剣の心 の Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="ja">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">剣の心 の Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">この世は、强ければ生き、弱ければし。</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            ホーム
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            アーカイブ
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-reading">
+          <a href="/reading" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            読书
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-taobao_shop">
+          <a href="https://shop152117682.taobao.com/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            彫刻時間の衣館
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            につい
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Cassandra 单机多节点安装
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">投稿日</span>
+            <time itemprop="dateCreated" datetime="2015-12-20T14:05:21+08:00" content="2015-12-20">
+              2015-12-20
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Cassandra/" itemprop="url" rel="index">
+                    <span itemprop="name">Cassandra</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015/12/20/cassandra-multinode-onemachine/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/12/20/cassandra-multinode-onemachine/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Just a toy…</p>
+<ol>
+<li><p>修改host表</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">sudo vim /etc/hosts</span><br><span class="line">127.0.0.1 127.0.0.2</span><br><span class="line">127.0.0.1 127.0.0.3</span><br><span class="line">127.0.0.1 127.0.0.4</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>下载Cassandra tar包解压到三个不同的目录，每个目录对应一个节点<br><code>node1  127.0.0.2 cassandra-node1</code><br><code>node2  127.0.0.3 cassandra-node2</code><br><code>node3  127.0.0.4 cassandra-node3</code></p>
+</li>
+<li><p>修改三个节点配置文件中的Cluster_name为”Test Cluster”</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># The name of the cluster. This is mainly used to prevent machines in</span></span><br><span class="line"><span class="comment"># one logical cluster from joining another.</span></span><br><span class="line">cluster_name: <span class="string">'Test Cluster'</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>配置节点node1作为seeds</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># any class that implements the SeedProvider interface and has a</span></span><br><span class="line"><span class="comment"># constructor that takes a Map&lt;String, String&gt; of parameters will do.</span></span><br><span class="line">seed_provider:</span><br><span class="line">    <span class="comment"># Addresses of hosts that are deemed contact points. </span></span><br><span class="line">    <span class="comment"># Cassandra nodes use this list of hosts to find each other and learn</span></span><br><span class="line">    <span class="comment"># the topology of the ring.  You must change this if you are running</span></span><br><span class="line">    <span class="comment"># multiple nodes!</span></span><br><span class="line">    - class_name: org.apache.cassandra.locator.SimpleSeedProvider</span><br><span class="line">      parameters:</span><br><span class="line">          <span class="comment"># seeds is actually a comma-delimited list of addresses.</span></span><br><span class="line">          <span class="comment"># Ex: "&lt;ip1&gt;,&lt;ip2&gt;,&lt;ip3&gt;"</span></span><br><span class="line">          - seeds: <span class="string">"127.0.0.2"</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改每个节点的listen_address, rpc_address和rpc_port</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">node1: listen_address: 127.0.0.2, rpc_address: 127.0.0.2, rpc_port: 9161</span><br><span class="line">node2: listen_address: 127.0.0.2, rpc_address: 127.0.0.3, rpc_port: 9162</span><br><span class="line">node3: listen_address: 127.0.0.2, rpc_address: 127.0.0.4, rpc_port: 9163</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改initial_token为0, num_tokens为2</p>
+ <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#If you leave this unspecified, Cassandra will use the default of 1 token for legacy compatibility,</span></span><br><span class="line"><span class="comment"># and will use the initial_token as described below.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># Specifying initial_token will override this setting on the node's initial start,</span></span><br><span class="line"><span class="comment"># on subsequent starts, this setting will apply even if initial token is set.</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># If you already have a cluster with 1 token per node, and wish to migrate to </span></span><br><span class="line"><span class="comment"># multiple tokens per node, see http://wiki.apache.org/cassandra/Operations</span></span><br><span class="line"><span class="comment">#num_tokens: 256</span></span><br><span class="line">num_tokens: 2</span><br><span class="line"></span><br><span class="line"><span class="comment"># initial_token allows you to specify tokens manually.  While you can use # it with</span></span><br><span class="line"><span class="comment"># vnodes (num_tokens &gt; 1, above) -- in which case you should provide a </span></span><br><span class="line"><span class="comment"># comma-separated list -- it's primarily used when adding nodes # to legacy clusters </span></span><br><span class="line"><span class="comment"># that do not have vnodes enabled.</span></span><br><span class="line"><span class="comment"># initial_token:</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改每个节点的JMX_PORT (conf/cassandra-env.sh)</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">node1 8081</span><br><span class="line">node2 8082</span><br><span class="line">node3 8083</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>修改每个节点的数据存储目录</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">node1:</span><br><span class="line">data_file_directories:</span><br><span class="line"> - /data/apps/data/cassandra-node1/data</span><br><span class="line">commitlog_directory: /data/apps/data/cassandra-node1/commitlog</span><br><span class="line">saved_caches_directory: /data/apps/data/cassandra/saved_caches</span><br><span class="line">node2:</span><br><span class="line">data_file_directories:</span><br><span class="line"> - /data/apps/data/cassandra-node2/data</span><br><span class="line">commitlog_directory: /data/apps/data/cassandra-node2/commitlog</span><br><span class="line">saved_caches_directory: /data/apps/data/cassandra-node2/saved_caches</span><br><span class="line">node3:</span><br><span class="line">data_file_directories:</span><br><span class="line"> - /data/apps/data/cassandra-node3/data</span><br><span class="line">commitlog_directory: /data/apps/data/cassandra-node3/commitlog</span><br><span class="line">saved_caches_directory: /data/apps/data/cassandra-node3/saved_caches</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>启动每个节点</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line">node1: INFO  08:38:14 Node /127.0.0.2 state jump to normal</span><br><span class="line">=========================================</span><br><span class="line">node2: 报错</span><br><span class="line">[easemob@vbox-jiangwei opt]$ cassandra-nodeERROR 08:39:11 Exception encountered during startup</span><br><span class="line">java.lang.RuntimeException: Unable to gossip with any seeds</span><br><span class="line">	at org.apache.cassandra.gms.Gossiper.doShadowRound(Gossiper.java:1245) ~[apache-cassandra-2.1.3.jar:2.1.3]</span><br><span class="line">	at org.apache.cassandra.service.StorageService.checkForEndpointCollision(StorageService.java:446) ~[apache-cassandra-2.1.3.jar:2.1.3]</span><br><span class="line">	at org.apache.cassandra.service.StorageService.prepareToJoin(StorageService.java:689) ~[apache-cassandra-2.1.3.jar:2.1.3]</span><br><span class="line">	at org.apache.cassandra.service.StorageService.initServer(StorageService.java:626) ~[apache-cassandra-2.1.3.jar:2.1.3]</span><br><span class="line">	at org.apache.cassandra.service.StorageService.initServer(StorageService.java:518) ~[apache-cassandra-2.1.3.jar:2.1.3]</span><br><span class="line">	at org.apache.cassandra.service.CassandraDaemon.setup(CassandraDaemon.java:338) [apache-cassandra-2.1.3.jar:2.1.3]</span><br><span class="line">	at org.apache.cassandra.service.CassandraDaemon.activate(CassandraDaemon.java:465) [apache-cassandra-2.1.3.jar:2.1.3]</span><br><span class="line">	at org.apache.cassandra.service.CassandraDaemon.main(CassandraDaemon.java:554) [apache-cassandra-2.1.3.jar:2.1.3]</span><br><span class="line">java.lang.RuntimeException: Unable to gossip with any seeds</span><br><span class="line">	at org.apache.cassandra.gms.Gossiper.doShadowRound(Gossiper.java:1245)</span><br><span class="line">	at org.apache.cassandra.service.StorageService.checkForEndpointCollision(StorageService.java:446)</span><br><span class="line">	at org.apache.cassandra.service.StorageService.prepareToJoin(StorageService.java:689)</span><br><span class="line">	at org.apache.cassandra.service.StorageService.initServer(StorageService.java:626)</span><br><span class="line">	at org.apache.cassandra.service.StorageService.initServer(StorageService.java:518)</span><br><span class="line">	at org.apache.cassandra.service.CassandraDaemon.setup(CassandraDaemon.java:338)</span><br><span class="line">	at org.apache.cassandra.service.CassandraDaemon.activate(CassandraDaemon.java:465)</span><br><span class="line">	at org.apache.cassandra.service.CassandraDaemon.main(CassandraDaemon.java:554)</span><br><span class="line">Exception encountered during startup: Unable to gossip with any seeds</span><br><span class="line">INFO  08:39:11 Announcing shutdown</span><br><span class="line">=========================================</span><br><span class="line">node3: 报错</span><br><span class="line">ERROR 08:40:20 Exception encountered during startup</span><br><span class="line">java.lang.RuntimeException: Unable to gossip with any seeds</span><br><span class="line">	at org.apache.cassandra.gms.Gossiper.doShadowRound(Gossiper.java:1245) ~[apache-cassandra-2.1.3.jar:2.1.3]</span><br><span class="line">	at org.apache.cassandra.service.StorageService.checkForEndpointCollision(StorageService.java:446) ~[apache-cassandra-2.1.3.jar:2.1.3]</span><br><span class="line">	at org.apache.cassandra.service.StorageService.prepareToJoin(StorageService.java:689) ~[apache-cassandra-2.1.3.jar:2.1.3]</span><br><span class="line">	at org.apache.cassandra.service.StorageService.initServer(StorageService.java:626) ~[apache-cassandra-2.1.3.jar:2.1.3]</span><br><span class="line">	at org.apache.cassandra.service.StorageService.initServer(StorageService.java:518) ~[apache-cassandra-2.1.3.jar:2.1.3]</span><br><span class="line">	at org.apache.cassandra.service.CassandraDaemon.setup(CassandraDaemon.java:338) [apache-cassandra-2.1.3.jar:2.1.3]</span><br><span class="line">	at org.apache.cassandra.service.CassandraDaemon.activate(CassandraDaemon.java:465) [apache-cassandra-2.1.3.jar:2.1.3]</span><br><span class="line">	at org.apache.cassandra.service.CassandraDaemon.main(CassandraDaemon.java:554) [apache-cassandra-2.1.3.jar:2.1.3]</span><br><span class="line">java.lang.RuntimeException: Unable to gossip with any seeds</span><br><span class="line">	at org.apache.cassandra.gms.Gossiper.doShadowRound(Gossiper.java:1245)</span><br><span class="line">	at org.apache.cassandra.service.StorageService.checkForEndpointCollision(StorageService.java:446)</span><br><span class="line">	at org.apache.cassandra.service.StorageService.prepareToJoin(StorageService.java:689)</span><br><span class="line">	at org.apache.cassandra.service.StorageService.initServer(StorageService.java:626)</span><br><span class="line">	at org.apache.cassandra.service.StorageService.initServer(StorageService.java:518)</span><br><span class="line">	at org.apache.cassandra.service.CassandraDaemon.setup(CassandraDaemon.java:338)</span><br><span class="line">	at org.apache.cassandra.service.CassandraDaemon.activate(CassandraDaemon.java:465)</span><br><span class="line">	at org.apache.cassandra.service.CassandraDaemon.main(CassandraDaemon.java:554)</span><br><span class="line">Exception encountered during startup: Unable to gossip with any seeds</span><br><span class="line">INFO  08:40:20 Announcing shutdown</span><br><span class="line">INFO  08:40:22 Waiting <span class="keyword">for</span> messaging service to quiesce</span><br><span class="line">INFO  08:40:22 MessagingService has terminated the accept() thread</span><br><span class="line">报错了，汗。发现我的防火墙没关，关掉。还是没好。</span><br><span class="line">修改了一下seeds: **- seeds: <span class="string">"127.0.0.2,127.0.0.3,127.0.0.4"</span>**，这把都起来了。</span><br><span class="line">node1:</span><br><span class="line">INFO  [main] 2015-12-20 17:14:06,267 Server.java:180 - Starting listening <span class="keyword">for</span> CQL clients on /127.0.0.2:9042...</span><br><span class="line">INFO  [main] 2015-12-20 17:14:06,392 ThriftServer.java:119 - Binding thrift service to /127.0.0.2:9161</span><br><span class="line">INFO  [Thread-2] 2015-12-20 17:14:06,404 ThriftServer.java:136 - Listening <span class="keyword">for</span> thrift clients...</span><br><span class="line">node2:</span><br><span class="line">INFO  [main] 2015-12-20 17:13:38,925 Server.java:180 - Starting listening <span class="keyword">for</span> CQL clients on /127.0.0.3:9042...</span><br><span class="line">INFO  [main] 2015-12-20 17:13:39,032 ThriftServer.java:119 - Binding thrift service to /127.0.0.3:9162</span><br><span class="line">INFO  [Thread-2] 2015-12-20 17:13:39,042 ThriftServer.java:136 - Listening <span class="keyword">for</span> thrift clients...</span><br><span class="line">node3:</span><br><span class="line">INFO  [main] 2015-12-20 17:15:47,877 Server.java:180 - Starting listening <span class="keyword">for</span> CQL clients on /127.0.0.4:9042...</span><br><span class="line">INFO  [main] 2015-12-20 17:15:48,063 ThriftServer.java:119 - Binding thrift service to /127.0.0.4:9163</span><br><span class="line">INFO  [Thread-2] 2015-12-20 17:15:48,076 ThriftServer.java:136 - Listening <span class="keyword">for</span> thrift clients...</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>检查Cassandra环的状态</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">$ cassandra-node2/bin/nodetool -h 127.0.0.3 ring</span><br><span class="line">nodetool: Failed to connect to <span class="string">'127.0.0.3:8082'</span> - ConnectException: <span class="string">'Connection refused'</span>.</span><br><span class="line">[easemob@vbox-jiangwei opt]$ cassandra-node1/bin/nodetool -h 127.0.0.2 ring</span><br><span class="line"></span><br><span class="line">Datacenter: datacenter1</span><br><span class="line">==========</span><br><span class="line">Address    Rack        Status State   Load            Owns      Token</span><br><span class="line">                                                               -3849144317860306666</span><br><span class="line">127.0.0.2  rack1       Up     Normal  102.06 KB       100.00%  -7634413041083318489</span><br><span class="line">127.0.0.2  rack1       Up     Normal  102.06 KB       100.00%  -3849144317860306666</span><br><span class="line"></span><br><span class="line">  Warning: <span class="string">"nodetool ring"</span> is used to output all the tokens of a node.</span><br><span class="line">  To view status related info of a node use <span class="string">"nodetool status"</span> instead.</span><br><span class="line"></span><br><span class="line">cassandra-node3/bin/nodetool -h 127.0.0.4 ring</span><br><span class="line">nodetool: Failed to connect to <span class="string">'127.0.0.4:8083'</span> - ConnectException: <span class="string">'Connection refused'</span>.</span><br><span class="line">检查了一下进程，最后一个起的节点还在，别的都死掉了。</span><br></pre></td></tr></table></figure></li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Cassandra/" rel="tag">#Cassandra</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/12/20/english-liulishuo-letter-for-daughter/" rel="next" title="英语学习 - 给女儿的信">
+                <i class="fa fa-chevron-left"></i> 英语学习 - 给女儿的信
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/12/31/for-2015/" rel="prev" title="写给即将过去的2015">
+                写给即将过去的2015 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2015/12/20/cassandra-multinode-onemachine/"
+           data-title="Cassandra 单机多节点安装" data-url="http://kenshinn.net/2015/12/20/cassandra-multinode-onemachine/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            見出し
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            概要
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="剣の心" />
+          <p class="site-author-name" itemprop="name">剣の心</p>
+          <p class="site-description motion-element" itemprop="description">この世は、强ければ生き、弱ければし。</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">17</span>
+              <span class="site-state-item-name">ポスト</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">カテゴリ</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">タグ</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/lynchlee" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/funnyweilee" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://in.relation.to/strong-liu" title="Strong" target="_blank">Strong</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.liulantao.com" title="Lax" target="_blank">Lax</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://ericliang.info" title="Eric" target="_blank">Eric</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://xieyajie.github.io/" title="Yajie" target="_blank">Yajie</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.weittor.com/" title="Weitter" target="_blank">Weitter</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <p class="post-toc-empty">見出しがありません</p>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">剣の心</span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"kenshinn"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+      
+      <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+      <script src="/js/src/hook-duoshuo.js"></script>
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>

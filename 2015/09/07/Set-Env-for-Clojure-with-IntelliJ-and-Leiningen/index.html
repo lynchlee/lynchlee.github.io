@@ -1,0 +1,713 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Clojure,Lisp,Interllij," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="起步Clojure编程．..
+OS: Ubuntu 14.10
+IDEA 14.0.3 Ultimate
+安装Leiningen按照 http://leiningen.org 的指南安装好lein
+安装La Clojure安装Idea插件La Clojure。启动Idea，点左上角的File –&amp;gt; Settings  –&amp;gt; Plugins –&amp;gt; 搜”Clojure” , 然后找到">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Set env for Clojure with IntelliJ and Leiningen">
+<meta property="og:url" content="http://kenshinn.net/2015/09/07/Set-Env-for-Clojure-with-IntelliJ-and-Leiningen/index.html">
+<meta property="og:site_name" content="剣の心 の Blog">
+<meta property="og:description" content="起步Clojure编程．..
+OS: Ubuntu 14.10
+IDEA 14.0.3 Ultimate
+安装Leiningen按照 http://leiningen.org 的指南安装好lein
+安装La Clojure安装Idea插件La Clojure。启动Idea，点左上角的File –&amp;gt; Settings  –&amp;gt; Plugins –&amp;gt; 搜”Clojure” , 然后找到">
+<meta property="og:image" content="http://kenshinn.net/img/clojure/20150907235347.png">
+<meta property="og:updated_time" content="2016-05-22T08:57:57.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Set env for Clojure with IntelliJ and Leiningen">
+<meta name="twitter:description" content="起步Clojure编程．..
+OS: Ubuntu 14.10
+IDEA 14.0.3 Ultimate
+安装Leiningen按照 http://leiningen.org 的指南安装好lein
+安装La Clojure安装Idea插件La Clojure。启动Idea，点左上角的File –&amp;gt; Settings  –&amp;gt; Plugins –&amp;gt; 搜”Clojure” , 然后找到">
+<meta name="twitter:image" content="http://kenshinn.net/img/clojure/20150907235347.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '剣の心'
+    }
+  };
+</script>
+
+  <title> Set env for Clojure with IntelliJ and Leiningen | 剣の心 の Blog </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="ja">
+
+  
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">剣の心 の Blog</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">この世は、强ければ生き、弱ければし。</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            ホーム
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            アーカイブ
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-reading">
+          <a href="/reading" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            読书
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-taobao_shop">
+          <a href="https://shop152117682.taobao.com/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-heartbeat"></i> <br />
+            
+            彫刻時間の衣館
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            につい
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Set env for Clojure with IntelliJ and Leiningen
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">投稿日</span>
+            <time itemprop="dateCreated" datetime="2015-09-07T23:47:19+08:00" content="2015-09-07">
+              2015-09-07
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2015/09/07/Set-Env-for-Clojure-with-IntelliJ-and-Leiningen/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/09/07/Set-Env-for-Clojure-with-IntelliJ-and-Leiningen/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>起步Clojure编程．..</p>
+<p>OS: Ubuntu 14.10</p>
+<p>IDEA 14.0.3 Ultimate</p>
+<p>安装Leiningen<br>按照 <a href="http://leiningen.org" target="_blank" rel="external">http://leiningen.org</a> 的指南安装好lein</p>
+<p>安装La Clojure<br>安装Idea插件La Clojure。启动Idea，点左上角的File –&gt; Settings  –&gt; Plugins –&gt; 搜”Clojure” , 然后找到La Clojure, 然后Install。</p>
+<a id="more"></a>
+<p>新建项目<br>在workspace下建立clojure工程。输入模式:  lein new app groupId/artifactId。groupId和artifactId和Maven里的概念一致</p>
+<p>实例: $lein new app cn.kenshinn/clojure_demo， 就会依照模版建立一个clojure工程。</p>
+<p>导入IDEA<br>这个工程直接导入IDEA不会被正确识别，因此需要在clojure_demo目录下执行lein pom，生成相应的pom。</p>
+<p>pom.xml文件内容如下:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;</span><br><span class="line">  &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;</span><br><span class="line">  &lt;groupId&gt;cn.kenshinn&lt;/groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;clojure_demo&lt;/artifactId&gt;</span><br><span class="line">  &lt;packaging&gt;jar&lt;/packaging&gt;</span><br><span class="line">  &lt;version&gt;0.1.0-SNAPSHOT&lt;/version&gt;</span><br><span class="line">  &lt;name&gt;clojure_demo&lt;/name&gt;</span><br><span class="line">  &lt;description&gt;FIXME: write description&lt;/description&gt;</span><br><span class="line">  &lt;url&gt;http://example.com/FIXME&lt;/url&gt;</span><br><span class="line">  &lt;licenses&gt;</span><br><span class="line">    &lt;license&gt;</span><br><span class="line">      &lt;name&gt;Eclipse Public License&lt;/name&gt;</span><br><span class="line">      &lt;url&gt;http://www.eclipse.org/legal/epl-v10.html&lt;/url&gt;</span><br><span class="line">    &lt;/license&gt;</span><br><span class="line">  &lt;/licenses&gt;</span><br><span class="line">  &lt;build&gt;</span><br><span class="line">    &lt;sourceDirectory&gt;src&lt;/sourceDirectory&gt;</span><br><span class="line">    &lt;testSourceDirectory&gt;test&lt;/testSourceDirectory&gt;</span><br><span class="line">    &lt;resources&gt;</span><br><span class="line">      &lt;resource&gt;</span><br><span class="line">        &lt;directory&gt;resources&lt;/directory&gt;</span><br><span class="line">      &lt;/resource&gt;</span><br><span class="line">    &lt;/resources&gt;</span><br><span class="line">    &lt;testResources&gt;</span><br><span class="line">      &lt;testResource&gt;</span><br><span class="line">        &lt;directory&gt;dev-resources&lt;/directory&gt;</span><br><span class="line">      &lt;/testResource&gt;</span><br><span class="line">      &lt;testResource&gt;</span><br><span class="line">        &lt;directory&gt;resources&lt;/directory&gt;</span><br><span class="line">      &lt;/testResource&gt;</span><br><span class="line">    &lt;/testResources&gt;</span><br><span class="line">    &lt;directory&gt;target&lt;/directory&gt;</span><br><span class="line">    &lt;outputDirectory&gt;target/classes&lt;/outputDirectory&gt;</span><br><span class="line">    &lt;plugins/&gt;</span><br><span class="line">  &lt;/build&gt;</span><br><span class="line">  &lt;repositories&gt;</span><br><span class="line">    &lt;repository&gt;</span><br><span class="line">      &lt;id&gt;central&lt;/id&gt;</span><br><span class="line">      &lt;url&gt;https://repo1.maven.org/maven2/&lt;/url&gt;</span><br><span class="line">      &lt;snapshots&gt;</span><br><span class="line">        &lt;enabled&gt;false&lt;/enabled&gt;</span><br><span class="line">      &lt;/snapshots&gt;</span><br><span class="line">      &lt;releases&gt;</span><br><span class="line">        &lt;enabled&gt;true&lt;/enabled&gt;</span><br><span class="line">      &lt;/releases&gt;</span><br><span class="line">    &lt;/repository&gt;</span><br><span class="line">    &lt;repository&gt;</span><br><span class="line">      &lt;id&gt;clojars&lt;/id&gt;</span><br><span class="line">      &lt;url&gt;https://clojars.org/repo/&lt;/url&gt;</span><br><span class="line">      &lt;snapshots&gt;</span><br><span class="line">        &lt;enabled&gt;true&lt;/enabled&gt;</span><br><span class="line">      &lt;/snapshots&gt;</span><br><span class="line">      &lt;releases&gt;</span><br><span class="line">        &lt;enabled&gt;true&lt;/enabled&gt;</span><br><span class="line">      &lt;/releases&gt;</span><br><span class="line">    &lt;/repository&gt;</span><br><span class="line">  &lt;/repositories&gt;</span><br><span class="line">  &lt;dependencies&gt;</span><br><span class="line">    &lt;dependency&gt;</span><br><span class="line">      &lt;groupId&gt;org.clojure&lt;/groupId&gt;</span><br><span class="line">      &lt;artifactId&gt;clojure&lt;/artifactId&gt;</span><br><span class="line">      &lt;version&gt;1.6.0&lt;/version&gt;</span><br><span class="line">    &lt;/dependency&gt;</span><br><span class="line">    &lt;dependency&gt;</span><br><span class="line">      &lt;groupId&gt;org.clojure&lt;/groupId&gt;</span><br><span class="line">      &lt;artifactId&gt;tools.nrepl&lt;/artifactId&gt;</span><br><span class="line">      &lt;version&gt;0.2.6&lt;/version&gt;</span><br><span class="line">      &lt;exclusions&gt;</span><br><span class="line">        &lt;exclusion&gt;</span><br><span class="line">          &lt;groupId&gt;org.clojure&lt;/groupId&gt;</span><br><span class="line">          &lt;artifactId&gt;clojure&lt;/artifactId&gt;</span><br><span class="line">        &lt;/exclusion&gt;</span><br><span class="line">      &lt;/exclusions&gt;</span><br><span class="line">      &lt;scope&gt;test&lt;/scope&gt;</span><br><span class="line">    &lt;/dependency&gt;</span><br><span class="line">    &lt;dependency&gt;</span><br><span class="line">      &lt;groupId&gt;clojure-complete&lt;/groupId&gt;</span><br><span class="line">      &lt;artifactId&gt;clojure-complete&lt;/artifactId&gt;</span><br><span class="line">      &lt;version&gt;0.2.3&lt;/version&gt;</span><br><span class="line">      &lt;exclusions&gt;</span><br><span class="line">        &lt;exclusion&gt;</span><br><span class="line">          &lt;groupId&gt;org.clojure&lt;/groupId&gt;</span><br><span class="line">          &lt;artifactId&gt;clojure&lt;/artifactId&gt;</span><br><span class="line">        &lt;/exclusion&gt;</span><br><span class="line">      &lt;/exclusions&gt;</span><br><span class="line">      &lt;scope&gt;test&lt;/scope&gt;</span><br><span class="line">    &lt;/dependency&gt;</span><br><span class="line">  &lt;/dependencies&gt;</span><br><span class="line">&lt;/project&gt;</span><br><span class="line"></span><br><span class="line">&lt;!-- This file was autogenerated by Leiningen.</span><br><span class="line">  Please do not edit it directly; instead edit project.clj and regenerate it.</span><br><span class="line">  It should not be considered canonical data. For more information see</span><br><span class="line">  https://github.com/technomancy/leiningen --&gt;</span><br></pre></td></tr></table></figure></p>
+<p>然后在IDEA中import project,　选择工程目录, 然后点Maven，一路点下去。<br>工程如下图<br><img src="/img/clojure/20150907235347.png" alt=""></p>
+<p>配置main函数<br>在打开的IDEA工程中，打开src目录，在cn.kenshinn包中有clojure_demo.clj文件。</p>
+<p>这个clojure文件中，并没有main函数，因此在IDEA中执行run, 什么也不会输出。</p>
+<p>把这个文件的内容改一下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">(ns cn.kenshinn.clojure_demo)</span><br><span class="line"></span><br><span class="line">(defn foo</span><br><span class="line">  &quot;I don&apos;t do a whole lot.&quot;</span><br><span class="line">  [x]</span><br><span class="line">  (println x &quot;Hello, World!&quot;))</span><br></pre></td></tr></table></figure>
+<p>然后在IDEA中最上边的菜单中点Run， 选择Edit Configurations, 选中Run main function in the script namespace，点OK。</p>
+<p>在Run菜单中执行Run “clojure_demo”， 程序会打印出”Hello, World!”。</p>
+<p>这时候，如果cmd下执行lein run， 会说“No :main namespace specified in project.clj”.</p>
+<p>需要修改project.clj加上:main cn.kenshinn.clojure_sample指定main函数<br><figure class="highlight clojure"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">(<span class="name">defproject</span> hs.clojure/clojure_sample <span class="string">"0.1.0-SNAPSHOT"</span></span><br><span class="line">  <span class="symbol">:description</span> <span class="string">"FIXME: write description"</span></span><br><span class="line">  <span class="symbol">:main</span> cn.kenshinn.clojure_sample</span><br><span class="line">  <span class="symbol">:url</span> <span class="string">"http://example.com/FIXME"</span></span><br><span class="line">  <span class="symbol">:license</span> &#123;<span class="symbol">:name</span> <span class="string">"Eclipse Public License"</span></span><br><span class="line">            <span class="symbol">:url</span> <span class="string">"http://www.eclipse.org/legal/epl-v10.html"</span>&#125;</span><br><span class="line">  <span class="symbol">:dependencies</span> [[org.clojure/clojure <span class="string">"1.6.0"</span>]])</span><br></pre></td></tr></table></figure></p>
+<p>保存后，执行lein run，输出”Hello, world!”</p>
+<p>Perfect !!!</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Clojure/" rel="tag">#Clojure</a>
+          
+            <a href="/tags/Lisp/" rel="tag">#Lisp</a>
+          
+            <a href="/tags/Interllij/" rel="tag">#Interllij</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/08/22/Import-OpenTSDB-source-into-Intellij/" rel="next" title="Import OpenTSDB source into Intellij">
+                <i class="fa fa-chevron-left"></i> Import OpenTSDB source into Intellij
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/10/19/spring-aop-cache-manuple/" rel="prev" title="利用SpringAOP手动实现一个缓存">
+                利用SpringAOP手动实现一个缓存 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2015/09/07/Set-Env-for-Clojure-with-IntelliJ-and-Leiningen/"
+           data-title="Set env for Clojure with IntelliJ and Leiningen" data-url="http://kenshinn.net/2015/09/07/Set-Env-for-Clojure-with-IntelliJ-and-Leiningen/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            見出し
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            概要
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.png"
+               alt="剣の心" />
+          <p class="site-author-name" itemprop="name">剣の心</p>
+          <p class="site-description motion-element" itemprop="description">この世は、强ければ生き、弱ければし。</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">17</span>
+              <span class="site-state-item-name">ポスト</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">カテゴリ</span>
+              
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">タグ</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/lynchlee" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/funnyweilee" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://in.relation.to/strong-liu" title="Strong" target="_blank">Strong</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.liulantao.com" title="Lax" target="_blank">Lax</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://ericliang.info" title="Eric" target="_blank">Eric</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://xieyajie.github.io/" title="Yajie" target="_blank">Yajie</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://blog.weittor.com/" title="Weitter" target="_blank">Weitter</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <p class="post-toc-empty">見出しがありません</p>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">剣の心</span>
+</div>
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="http://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"kenshinn"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+      
+      <script src="/vendors/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+      <script src="/js/src/hook-duoshuo.js"></script>
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+
+</body>
+</html>
