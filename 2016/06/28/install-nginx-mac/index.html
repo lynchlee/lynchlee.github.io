@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Nginx," />
 
 
 
@@ -84,15 +84,28 @@
 
 
 
-<meta name="description" content="この世は、强ければ生き、弱ければし。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="剣の心 の Blog">
-<meta property="og:url" content="http://kenshinn.net/tags/Java/index.html">
+<meta name="description" content="Install with brewUse brew to install the nginx with command:
+$ brew install nginx
+After install run:$ sudo nginx
+TestingTest it by going to URL: http://localhost:8080
+ConfigurationThe default place of">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Installing Nginx in Mac OS X  With Homebrew">
+<meta property="og:url" content="http://kenshinn.net/2016/06/28/install-nginx-mac/index.html">
 <meta property="og:site_name" content="剣の心 の Blog">
-<meta property="og:description" content="この世は、强ければ生き、弱ければし。">
+<meta property="og:description" content="Install with brewUse brew to install the nginx with command:
+$ brew install nginx
+After install run:$ sudo nginx
+TestingTest it by going to URL: http://localhost:8080
+ConfigurationThe default place of">
+<meta property="og:updated_time" content="2016-06-28T08:04:15.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="剣の心 の Blog">
-<meta name="twitter:description" content="この世は、强ければ生き、弱ければし。">
+<meta name="twitter:title" content="Installing Nginx in Mac OS X  With Homebrew">
+<meta name="twitter:description" content="Install with brewUse brew to install the nginx with command:
+$ brew install nginx
+After install run:$ sudo nginx
+TestingTest it by going to URL: http://localhost:8080
+ConfigurationThe default place of">
 
 
 
@@ -110,7 +123,7 @@
   };
 </script>
 
-  <title> 標籤: Java | 剣の心 の Blog </title>
+  <title> Installing Nginx in Mac OS X  With Homebrew | 剣の心 の Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-hk">
@@ -131,7 +144,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left  ">
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -249,53 +262,189 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-collapse">
-    <div class="collection-title">
-      <h2 >
-        Java
-        <small>標籤</small>
-      </h2>
-    </div>
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
 
     
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Installing Nginx in Mac OS X  With Homebrew
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">發表於</span>
+            <time itemprop="dateCreated" datetime="2016-06-28T16:00:13+08:00" content="2016-06-28">
+              2016-06-28
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/06/28/install-nginx-mac/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/06/28/install-nginx-mac/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
       
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+      
+        <h5 id="Install-with-brew"><a href="#Install-with-brew" class="headerlink" title="Install with brew"></a>Install with brew</h5><p>Use brew to install the nginx with command:</p>
+<p>$ brew install nginx</p>
+<p>After install run:<br>$ sudo nginx</p>
+<h5 id="Testing"><a href="#Testing" class="headerlink" title="Testing"></a>Testing</h5><p>Test it by going to URL: <a href="http://localhost:8080" target="_blank" rel="external">http://localhost:8080</a></p>
+<h5 id="Configuration"><a href="#Configuration" class="headerlink" title="Configuration"></a>Configuration</h5><p>The default place of nginx.conf on Mac after installing with brew is:<br>/usr/local/etc/nginx/nginx.conf</p>
+<p>Changing the default port<br>The nginx default port is 8080, we shall change it to 80. First stop the nginx server if it is running by:</p>
+<p>$ sudo nginx -s stop</p>
+<p>Then open nginx.conf with:<br>$ vim /usr/local/etc/nginx/nginx.conf</p>
+<p>and change the:</p>
+<p>/usr/local/etc/nginx/nginx.conf<br>server {<br>    listen       8080;<br>    server_name  localhost;</p>
+<pre><code>#access_log  logs/host.access.log  main;
 
-      <h1 class="post-title">
+location / {
+    root   html;
+    index  index.html index.htm;
+}
+</code></pre><p>to:</p>
+<p>/usr/local/etc/nginx/nginx.conf<br>server {<br>    listen       80;<br>    server_name  localhost;</p>
+<pre><code>#access_log  logs/host.access.log  main;
+
+location / {
+    root   html;
+    index  index.html index.htm;
+}
+</code></pre><p>Save configuration and start nginx by<br>$ sudo nginx</p>
+<p>Changing the path of defualt web location</p>
+<p>The nginx html folder (brew install only) is by the defult in:</p>
+<p>/usr/local/Cellar/nginx/1.2.3/html<br>Note: change 1.2.3 to your nginx version.</p>
+<p>The defualt path configuration:</p>
+<p>/usr/local/etc/nginx/nginx.conf<br>server {<br>    listen       80;<br>    server_name  localhost;</p>
+<pre><code>#access_log  logs/host.access.log  main;
+
+location / {
+    root   html;
+    index  index.html index.htm;
+}
+</code></pre><p>/usr/local/etc/nginx/nginx.conf<br>server {<br>    listen       80;<br>    server_name  localhost;</p>
+<pre><code>#access_log  logs/host.access.log  main;
+
+location / {
+    root   /Users/xajler/www;
+    index  index.html index.htm;
+}
+</code></pre><p>After change stop and start nginix server and nginx is now serving pages from your custom folder!</p>
+
+      
+    </div>
+
+    <div>
+      
         
-            <a class="post-title-link" href="/2016/01/06/java-thread-1/" itemprop="url">
-              
-                <span itemprop="name">Java多线程小记01 线程基础</span>
-              
-            </a>
+      
+    </div>
+
+    <div>
+      
         
-      </h1>
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-01-06T01:18:35+08:00"
-              content="2016-01-06" >
-          01-06
-        </time>
-      </div>
+      
+    </div>
 
-    </header>
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Nginx/" rel="tag">#Nginx</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/05/24/kongfu-of-yangguo/" rel="next" title="金轮法王对早期杨过的武功评论">
+                <i class="fa fa-chevron-left"></i> 金轮法王对早期杨过的武功评论
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </article>
 
 
-    
-  </div>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
           
 
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
 
           
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/06/28/install-nginx-mac/"
+           data-title="Installing Nginx in Mac OS X  With Homebrew" data-url="http://kenshinn.net/2016/06/28/install-nginx-mac/">
+      </div>
+    
+  </div>
+
 
         </div>
         
@@ -315,8 +464,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.png"
@@ -417,6 +575,17 @@
       </section>
 
       
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#Install-with-brew"><span class="nav-number">1.</span> <span class="nav-text">Install with brew</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Testing"><span class="nav-number">2.</span> <span class="nav-text">Testing</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Configuration"><span class="nav-number">3.</span> <span class="nav-text">Configuration</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
 
     </div>
   </aside>
@@ -512,6 +681,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
 
   
 
