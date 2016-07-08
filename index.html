@@ -273,6 +273,120 @@
             
               
                 
+                <a class="post-title-link" href="/2016/07/08/cassandra-query-using-composite-keys/" itemprop="url">
+                  Query using composite keys, other than Row Key in Cassandra
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">發表於</span>
+            <time itemprop="dateCreated" datetime="2016-07-08T16:44:09+08:00" content="2016-07-08">
+              2016-07-08
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/08/cassandra-query-using-composite-keys/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/08/cassandra-query-using-composite-keys/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>I want to query data filtering by composite keys other than Row Key in CQL3. These are my queries:</p>
+<pre><code>CREATE TABLE grades (id int,
+  date timestamp,
+  subject text,
+  status text,
+  PRIMARY KEY (id, subject, status, date)
+);
+</code></pre><p>When I try and access the data,</p>
+<pre><code>SELECT * FROM grades where id = 1098; //works fine
+SELECT * FROM grades where subject = &apos;English&apos; ALLOW FILTERING; //works fine
+SELECT * FROM grades where status = &apos;Active&apos; ALLOW FILTERING; //gives an error
+</code></pre><p>Bad Request: PRIMARY KEY part status cannot be restricted (preceding part subject is either not restricted or by a non-EQ relation)<br>Just to experiment, I shuffled the keys around keeping ‘id’ as my Primary Row Key always. I am always ONLY able to query using either the Primary Row key or the second key, considering above example, if I swap subjects and status in Primary Key list, I can then query with status but I get similar error if I try to do by subject or by time.<br>Am I doing something wrong? Can I not query data using any other composite key in CQL3? I’m using Cassandra 1.2.6 and CQL3.<br>Answers<br>That looks all normal behavior according to Cassandra Composite Key model (<a href="http://www.datastax.com/docs/1.2/cql_cli/cql/SELECT" target="_blank" rel="external">http://www.datastax.com/docs/1.2/cql_cli/cql/SELECT</a>). Cassandra data model aims (and this is a general NoSQL way of thinking) at granting that queries are performant, that comes to the expense of “restrictions” on the way you store and index your data, and then how you query it, namely you “always need to restrict the preceding part of subject” on the primary key.<br>You cannot swap elements on the primary key list on the queries (that is more a SQL way of thinking). You always need to “Constraint”/“Restrict” the previous element of the primary key if you are to use multiple elements of the composite key. This means that if you have composite key = (id, subject, status, date) and want to query “status”, you will need to restrict “id” and/or “subject” (“or” is possible in case you use “allow filtering”, i.e., you can restrict only “subject” and do not need to restrict “id”). So, if you want to query on “status” you will b able to query in two different ways:<br>select * from grades where id = ‘1093’ and subject = ‘English’ and status = ‘Active’;<br>Or</p>
+<pre><code>select * from grades where subject = &apos;English&apos; and status = &apos;Active&apos; allow filtering;
+</code></pre><p>The first is for a specific “student”, the second for all the “students” on the subject in status = “Active”.</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/07/08/cassandra-ALLOW-FILTERING/" itemprop="url">
                   ALLOW FILTERING explained
                 </a>
@@ -1340,134 +1454,11 @@ location / {
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2015/12/17/cassandra-token/" itemprop="url">
-                  关于Cassandra -- Token
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">發表於</span>
-            <time itemprop="dateCreated" datetime="2015-12-17T00:16:26+08:00" content="2015-12-17">
-              2015-12-17
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分類於</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Cassandra/" itemprop="url" rel="index">
-                    <span itemprop="name">Cassandra</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2015/12/17/cassandra-token/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/12/17/cassandra-token/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <blockquote>
-<p>Cassandra的集群中各个节点同等，非master/slave类型，数据在各个节点上做到均衡分布靠的是令牌机制，所以Cassandra的集群节点组成的环也叫做令牌环。令牌其实是一个数组串儿，他决定了每个节点存储的数据的分布范围，每个节点保存的数据的key在(前一个节点Token，本节点Token]的半开半闭区间内，所有的节点形成一个首尾相接的环，所以第一个节点保存的是大于最大Token小于等于最小Token之间的数据。各个节点持有一定范围内的令牌，但是不一定是只有一个返回，可以有多段，这个很好理解，cassandra集群是一个环，数据量是不断增长的，那么时刻都要保持集群均衡的话，各个节点的令牌返回会根据数据必须要变化。比如说集群有三个节点 node1 node2 node3, node1持有令牌范围为0-1,10-11, node2持有令牌2-5,　node3持有6-9.　那么当有一个新数据需要存储的时候，需要先决定存在哪个节点，生成token的策略就依赖具体的数据分区算法。常见的分区算法有Murmur3Partitioner，RandomPartitioner，ByteOrderedPartitioner。</p>
-</blockquote>
-<p>(未完待续)</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1508,7 +1499,7 @@ location / {
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">20</span>
+              <span class="site-state-item-count">21</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>

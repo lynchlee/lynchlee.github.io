@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Cassandra," />
 
 
 
@@ -84,15 +84,31 @@
 
 
 
-<meta name="description" content="この世は、强ければ生き、弱ければし。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="剣の心 の Blog">
-<meta property="og:url" content="http://kenshinn.net/archives/2016/05/index.html">
+<meta name="description" content="I want to query data filtering by composite keys other than Row Key in CQL3. These are my queries:
+CREATE TABLE grades (id int,
+  date timestamp,
+  subject text,
+  status text,
+  PRIMARY KEY (id, subj">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Query using composite keys, other than Row Key in Cassandra">
+<meta property="og:url" content="http://kenshinn.net/2016/07/08/cassandra-query-using-composite-keys/index.html">
 <meta property="og:site_name" content="剣の心 の Blog">
-<meta property="og:description" content="この世は、强ければ生き、弱ければし。">
+<meta property="og:description" content="I want to query data filtering by composite keys other than Row Key in CQL3. These are my queries:
+CREATE TABLE grades (id int,
+  date timestamp,
+  subject text,
+  status text,
+  PRIMARY KEY (id, subj">
+<meta property="og:updated_time" content="2016-07-08T08:45:33.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="剣の心 の Blog">
-<meta name="twitter:description" content="この世は、强ければ生き、弱ければし。">
+<meta name="twitter:title" content="Query using composite keys, other than Row Key in Cassandra">
+<meta name="twitter:description" content="I want to query data filtering by composite keys other than Row Key in CQL3. These are my queries:
+CREATE TABLE grades (id int,
+  date timestamp,
+  subject text,
+  status text,
+  PRIMARY KEY (id, subj">
 
 
 
@@ -110,7 +126,7 @@
   };
 </script>
 
-  <title> 歸檔 | 剣の心 の Blog </title>
+  <title> Query using composite keys, other than Row Key in Cassandra | 剣の心 の Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-hk">
@@ -131,7 +147,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left  page-archive  ">
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -249,73 +265,159 @@
           <div id="content" class="content">
             
 
-  <section id="posts" class="posts-collapse">
-    <span class="archive-move-on"></span>
-
-    <span class="archive-page-counter">
-      
-      
-      
-        
-      
-      嗯..! 目前共有 21 篇文章。 繼續努力。
-    </span>
-
+  <div id="posts" class="posts-expand">
     
 
-      
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Query using composite keys, other than Row Key in Cassandra
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">發表於</span>
+            <time itemprop="dateCreated" datetime="2016-07-08T16:44:09+08:00" content="2016-07-08">
+              2016-07-08
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/08/cassandra-query-using-composite-keys/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/08/cassandra-query-using-composite-keys/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
       
       
 
       
+        <p>I want to query data filtering by composite keys other than Row Key in CQL3. These are my queries:</p>
+<pre><code>CREATE TABLE grades (id int,
+  date timestamp,
+  subject text,
+  status text,
+  PRIMARY KEY (id, subject, status, date)
+);
+</code></pre><p>When I try and access the data,</p>
+<pre><code>SELECT * FROM grades where id = 1098; //works fine
+SELECT * FROM grades where subject = &apos;English&apos; ALLOW FILTERING; //works fine
+SELECT * FROM grades where status = &apos;Active&apos; ALLOW FILTERING; //gives an error
+</code></pre><p>Bad Request: PRIMARY KEY part status cannot be restricted (preceding part subject is either not restricted or by a non-EQ relation)<br>Just to experiment, I shuffled the keys around keeping ‘id’ as my Primary Row Key always. I am always ONLY able to query using either the Primary Row key or the second key, considering above example, if I swap subjects and status in Primary Key list, I can then query with status but I get similar error if I try to do by subject or by time.<br>Am I doing something wrong? Can I not query data using any other composite key in CQL3? I’m using Cassandra 1.2.6 and CQL3.<br>Answers<br>That looks all normal behavior according to Cassandra Composite Key model (<a href="http://www.datastax.com/docs/1.2/cql_cli/cql/SELECT" target="_blank" rel="external">http://www.datastax.com/docs/1.2/cql_cli/cql/SELECT</a>). Cassandra data model aims (and this is a general NoSQL way of thinking) at granting that queries are performant, that comes to the expense of “restrictions” on the way you store and index your data, and then how you query it, namely you “always need to restrict the preceding part of subject” on the primary key.<br>You cannot swap elements on the primary key list on the queries (that is more a SQL way of thinking). You always need to “Constraint”/“Restrict” the previous element of the primary key if you are to use multiple elements of the composite key. This means that if you have composite key = (id, subject, status, date) and want to query “status”, you will need to restrict “id” and/or “subject” (“or” is possible in case you use “allow filtering”, i.e., you can restrict only “subject” and do not need to restrict “id”). So, if you want to query on “status” you will b able to query in two different ways:<br>select * from grades where id = ‘1093’ and subject = ‘English’ and status = ‘Active’;<br>Or</p>
+<pre><code>select * from grades where subject = &apos;English&apos; and status = &apos;Active&apos; allow filtering;
+</code></pre><p>The first is for a specific “student”, the second for all the “students” on the subject in status = “Active”.</p>
+
+      
+    </div>
+
+    <div>
+      
         
-        <div class="collection-title">
-          <h2 class="archive-year motion-element" id="archive-year-2016">2016</h2>
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Cassandra/" rel="tag">#Cassandra</a>
+          
         </div>
       
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/07/08/cassandra-ALLOW-FILTERING/" rel="next" title="ALLOW FILTERING explained">
+                <i class="fa fa-chevron-left"></i> ALLOW FILTERING explained
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
       
 
       
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h1 class="post-title">
-        
-            <a class="post-title-link" href="/2016/05/24/kongfu-of-yangguo/" itemprop="url">
-              
-                <span itemprop="name">金轮法王对早期杨过的武功评论</span>
-              
-            </a>
-        
-      </h1>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-05-24T09:04:33+08:00"
-              content="2016-05-24" >
-          05-24
-        </time>
-      </div>
-
-    </header>
+      
+    </footer>
   </article>
 
 
 
-    
-
-  </section>
-
-  
-
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
           
 
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
 
           
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/07/08/cassandra-query-using-composite-keys/"
+           data-title="Query using composite keys, other than Row Key in Cassandra" data-url="http://kenshinn.net/2016/07/08/cassandra-query-using-composite-keys/">
+      </div>
+    
+  </div>
+
 
         </div>
         
@@ -335,8 +437,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.png"
@@ -437,6 +548,17 @@
       </section>
 
       
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <p class="post-toc-empty">此文章未包含目錄</p>
+            
+          </div>
+        </section>
+      
 
     </div>
   </aside>
@@ -532,11 +654,9 @@
   
 
   
-  
-    <script type="text/javascript" id="motion.page.archive">
-      $('.archive-year').velocity('transition.slideLeftIn');
-    </script>
-  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
 
 
   
