@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Cassandra," />
 
 
 
@@ -84,16 +84,19 @@
 
 
 
-<meta name="description" content="この世は、强ければ生き、弱ければし。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="taobao_shop">
-<meta property="og:url" content="http://kenshinn.net/taobao-shop/index.html">
+<meta name="description" content="While discussing with people at the London C* Summit, I realized that it was not always clear for them why Cassandra requires ALLOW FILTERING for some CQL queries and not for some others.
+Why ALLOW FI">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ALLOW FILTERING explained">
+<meta property="og:url" content="http://kenshinn.net/2016/07/08/cassandra-ALLOW-FILTERING/index.html">
 <meta property="og:site_name" content="剣の心 の Blog">
-<meta property="og:description" content="この世は、强ければ生き、弱ければし。">
-<meta property="og:updated_time" content="2016-05-22T10:14:28.000Z">
+<meta property="og:description" content="While discussing with people at the London C* Summit, I realized that it was not always clear for them why Cassandra requires ALLOW FILTERING for some CQL queries and not for some others.
+Why ALLOW FI">
+<meta property="og:updated_time" content="2016-07-08T07:10:41.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="taobao_shop">
-<meta name="twitter:description" content="この世は、强ければ生き、弱ければし。">
+<meta name="twitter:title" content="ALLOW FILTERING explained">
+<meta name="twitter:description" content="While discussing with people at the London C* Summit, I realized that it was not always clear for them why Cassandra requires ALLOW FILTERING for some CQL queries and not for some others.
+Why ALLOW FI">
 
 
 
@@ -111,13 +114,7 @@
   };
 </script>
 
-  <title>
-  
-
-  
-    taobao_shop | 剣の心 の Blog
-  
-</title>
+  <title> ALLOW FILTERING explained | 剣の心 の Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-hk">
@@ -138,7 +135,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left  ">
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -258,9 +255,156 @@
 
   <div id="posts" class="posts-expand">
     
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
     
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                ALLOW FILTERING explained
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">發表於</span>
+            <time itemprop="dateCreated" datetime="2016-07-08T15:08:43+08:00" content="2016-07-08">
+              2016-07-08
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/08/cassandra-ALLOW-FILTERING/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/08/cassandra-ALLOW-FILTERING/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
       
-    
+      
+
+      
+        <p>While discussing with people at the London C* Summit, I realized that it was not always clear for them why Cassandra requires ALLOW FILTERING for some CQL queries and not for some others.</p>
+<p>Why ALLOW FILTERING?</p>
+<p>Let’s take for example the following table:</p>
+<pre><code>CREATE TABLE blogs (blogId int, 
+                    time1 int, 
+                    time2 int, 
+                    author text, 
+                    content text, 
+                    PRIMARY KEY(blogId, time1, time2));
+</code></pre><p>If you execute the following query:</p>
+<pre><code>SELECT * FROM blogs;
+</code></pre><p>Cassandra will return you all the data that the table blogs contains.</p>
+<p>If you now want only the data at a specified time1, you will naturally add an equal condition on the column time1:</p>
+<pre><code>SELECT * FROM blogs WHERE time1 = 1418306451235;
+</code></pre><p>In response, you will receive the following error message:</p>
+<p>Bad Request: Cannot execute this query as it might involve data filtering and thus may have unpredictable performance. If you want to execute this query despite the performance unpredictability, use ALLOW FILTERING.<br>Cassandra knows that it might not be able to execute the query in an efficient way. It is therefore warning you: “Be careful. Executing this query as such might not be a good idea as it can use a lot of your computing resources”.</p>
+<p>The only way Cassandra can execute this query is by retrieving all the rows from the table blogs and then by filtering out the ones which do not have the requested value for the time1 column.</p>
+<p>If your table contains for example a 1 million rows and 95% of them have the requested value for the time1 column, the query will still be relatively efficient and you should use ALLOW FILTERING.</p>
+<p>On the other hand, if your table contains 1 million rows and only 2 rows contain the requested value for the time1 column, your query is extremely inefficient. Cassandra will load 999, 998 rows for nothing. If the query is often used, it is probably better to add an index on the time1 column.</p>
+<p>Unfortunately, Cassandra has no way to differentiate between the 2 cases above as they are depending on the data distribution of the table.  Cassandra is therefore warning you and relying on you to make the good choice.</p>
+<p>Secondary indices and ALLOW FILTERING</p>
+<p>If we add an index on the author column and execute the following query:</p>
+<pre><code>SELECT * FROM blogs WHERE author = ‘Jonathan Ellis’;
+</code></pre><p>Cassandra will return all the blogs that have been written by Jonathan and will not request ALLOW FILTERING. This is due to the fact that Cassandra can use the secondary index on the author column to find the matching rows and does not need to perform any filtering.</p>
+<p>But if we execute the following one:</p>
+<pre><code>SELECT * FROM blogs WHERE author=’Jonathan Ellis’ and time2 = 1418306451235;
+</code></pre><p>Cassandra will request ALLOW FILTERING as it will have to first find and load the rows containing Jonathan as author, and then to filter out the ones which do not have a time2 column equal to the specified value.</p>
+<p>Adding an index on time2 might improve the query performance. Cassandra will then use the index with the highest selectivity to find the rows that need to be loaded. It will however not change anything regarding the need for ALLOW FILTERING, as it will still have to filter the loaded rows using the remaining predicate.</p>
+<p>Making the right choice</p>
+<p>When your query is rejected by Cassandra because it needs filtering, you should resist the urge to just add ALLOW FILTERING to it. You should think about your data, your model and what you are trying to do.</p>
+<p>You always have multiple options. You can change your data model, add an index, use another table or use ALLOW FILTERING.</p>
+<p>You have to make the right choice for your specific use case.</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Cassandra/" rel="tag">#Cassandra</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/06/28/install-nginx-mac/" rel="next" title="Installing Nginx in Mac OS X  With Homebrew">
+                <i class="fa fa-chevron-left"></i> Installing Nginx in Mac OS X  With Homebrew
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
   </div>
 
 
@@ -274,8 +418,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="taobao-shop/index.html"
-           data-title="taobao_shop" data-url="http://kenshinn.net/taobao-shop/index.html">
+      <div class="ds-thread" data-thread-key="2016/07/08/cassandra-ALLOW-FILTERING/"
+           data-title="ALLOW FILTERING explained" data-url="http://kenshinn.net/2016/07/08/cassandra-ALLOW-FILTERING/">
       </div>
     
   </div>
@@ -299,8 +443,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.png"
@@ -401,6 +554,17 @@
       </section>
 
       
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <p class="post-toc-empty">此文章未包含目錄</p>
+            
+          </div>
+        </section>
+      
 
     </div>
   </aside>
@@ -496,6 +660,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
 
   
 
