@@ -323,8 +323,7 @@
 
       
         
-          
-            <h4 id="CQL-data-types"><a href="#CQL-data-types" class="headerlink" title="CQL data types"></a>CQL data types</h4><p>CQL defines built-in data types for columns. The counter type is unique.</p>
+          <h4 id="CQL-data-types"><a href="#CQL-data-types" class="headerlink" title="CQL data types"></a>CQL data types</h4><p>CQL defines built-in data types for columns. The counter type is unique.</p>
 <h6 id="CQL-Type"><a href="#CQL-Type" class="headerlink" title="CQL Type"></a>CQL Type</h6><table>
 <thead>
 <tr>
@@ -377,7 +376,7 @@
 <tr>
 <td>frozen</td>
 <td>tuples, collections, user-defined types</td>
-<td>A frozen value serializes multiple components into a single value. Non-frozen types allow updates to individual fields. Cassandra treats the value of a frozen type as a blob. The entire value must be overwritten.Note: Cassandra 2.1.0 to 2.1.2 requires using frozen for tuples:frozen <tuple <int,="" tuple<text,="" double="">&gt;&gt; Cassandra 2.1.3+ does not require this keyword for tuples.</tuple></td>
+<td>A frozen value serializes multiple components into a single value. Non-frozen types allow updates to individual fields. Cassandra treats the value of a frozen type as a blob. The entire value must be overwritten.Note: Cassandra 2.1.0 to 2.1.2 requires using frozen for tuples:frozen <tuple <int, tuple<text, double>&gt;&gt; Cassandra 2.1.3+ does not require this keyword for tuples.</td>
 </tr>
 <tr>
 <td>inet</td>
@@ -443,98 +442,11 @@
 </table>
 <p>In addition to the CQL types listed in this table, you can use a string containing the name of a JAVA class (a sub-class of AbstractType loadable by Cassandra) as a CQL type. The class name should either be fully qualified or relative to the org.apache.cassandra.db.marshal package.</p>
 <p>Enclose ASCII text, timestamp, and inet values in single quotation marks. Enclose names of a keyspace, table, or column in double quotation marks.</p>
-<h5 id="Java-types"><a href="#Java-types" class="headerlink" title="Java types"></a>Java types</h5><p>The Java types, from which most CQL types are derived, are obvious to Java programmers. The derivation of the following types, however, might not be obvious:<br>Derivation of selective CQL types</p>
-<table>
-<thead>
-<tr>
-<th>CQL type</th>
-<th>Java type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>decimal</td>
-<td>java.math.BigDecimal</td>
-</tr>
-<tr>
-<td>float</td>
-<td>java.lang.Float</td>
-</tr>
-<tr>
-<td>double</td>
-<td>java.lang.Double</td>
-</tr>
-<tr>
-<td>varint</td>
-<td>java.math.BigInteger</td>
-</tr>
-</tbody>
-</table>
-<h5 id="CQL-type-compatibility"><a href="#CQL-type-compatibility" class="headerlink" title="CQL type compatibility"></a>CQL type compatibility</h5><p>CQL data types have strict requirements for conversion compatibility. The following table shows the allowed alterations for data types:</p>
-<table>
-<thead>
-<tr>
-<th>Data type may be altered to</th>
-<th>Data type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>ascii, bigint, boolean, decimal, double, float, inet, int, timestamp, timeuuid, uuid, varchar, varint</td>
-<td>blob</td>
-</tr>
-<tr>
-<td>int</td>
-<td>varint</td>
-</tr>
-<tr>
-<td>text</td>
-<td>varchar</td>
-</tr>
-<tr>
-<td>timeuuid</td>
-<td>uuid</td>
-</tr>
-<tr>
-<td>varchar</td>
-<td>text</td>
-</tr>
-</tbody>
-</table>
-<p>Clustering columns have even stricter requirements, because clustering columns mandate the order in which data is written to disk. The following table shows the allow alterations for data types used in clustering columns:</p>
-<table>
-<thead>
-<tr>
-<th style="text-align:left">Data type may be altered to</th>
-<th>Data type</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align:left">int</td>
-<td>varint</td>
-</tr>
-<tr>
-<td style="text-align:left">text</td>
-<td>varchar</td>
-</tr>
-<tr>
-<td style="text-align:left">varchar</td>
-<td>text</td>
-</tr>
-</tbody>
-</table>
-<p>Topics in this section:</p>
-<h6 id="Blob-type"><a href="#Blob-type" class="headerlink" title="Blob type"></a>Blob type</h6><p>Cassandra blob data type represents a constant hexadecimal number.</p>
-<h6 id="Collection-type"><a href="#Collection-type" class="headerlink" title="Collection type"></a>Collection type</h6><p>A collection column is declared using the collection type, followed by another type.</p>
-<h6 id="Counter-type"><a href="#Counter-type" class="headerlink" title="Counter type"></a>Counter type</h6><p>A counter column value is a 64-bit signed integer.</p>
-<h6 id="UUID-and-timeuuid-types"><a href="#UUID-and-timeuuid-types" class="headerlink" title="UUID and timeuuid types"></a>UUID and timeuuid types</h6><p>The UUID (universally unique id) comparator type for avoiding collisions in column names.</p>
-<h6 id="uuid-and-Timeuuid-functions"><a href="#uuid-and-Timeuuid-functions" class="headerlink" title="uuid and Timeuuid functions"></a>uuid and Timeuuid functions</h6><p>About using Timeuuid functions.</p>
-<h6 id="Timestamp-type"><a href="#Timestamp-type" class="headerlink" title="Timestamp type"></a>Timestamp type</h6><p>A timestamp type can be entered as an integer for CQL input, or as a string literal in ISO 8601 formats.</p>
-<h6 id="Tuple-type"><a href="#Tuple-type" class="headerlink" title="Tuple type"></a>Tuple type</h6><p>You can use a tuple as a convenient alternative to a user-defined type.</p>
-<h6 id="User-defined-type"><a href="#User-defined-type" class="headerlink" title="User-defined type"></a>User-defined type</h6><p>A user-defined type facilitates handling multiple fields of related information in a table.</p>
-
-          
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/07/09/CQL-DataType-for-Cassandra/#more" rel="contents">
+              閱讀全文 &raquo;
+            </a>
+          </div>
         
       
     </div>
@@ -1294,11 +1206,10 @@ SELECT * FROM grades where status = &apos;Active&apos; ALLOW FILTERING; //gives 
 
       
         
-          
-            <h5 id="Install-with-brew"><a href="#Install-with-brew" class="headerlink" title="Install with brew"></a>Install with brew</h5><p>Use brew to install the nginx with command:</p>
+          <h5 id="Install-with-brew"><a href="#Install-with-brew" class="headerlink" title="Install with brew"></a>Install with brew</h5><p>Use brew to install the nginx with command:</p>
 <p>$ brew install nginx</p>
 <p>After install run:<br>$ sudo nginx</p>
-<h5 id="Testing"><a href="#Testing" class="headerlink" title="Testing"></a>Testing</h5><p>Test it by going to URL: <a href="http://localhost:8080" target="_blank" rel="external">http://localhost:8080</a></p>
+<h5 id="Testing"><a href="#Testing" class="headerlink" title="Testing"></a>Testing</h5><p>Test it by going to URL: <a href="http://localhost:8080">http://localhost:8080</a></p>
 <h5 id="Configuration"><a href="#Configuration" class="headerlink" title="Configuration"></a>Configuration</h5><p>The default place of nginx.conf on Mac after installing with brew is:<br>/usr/local/etc/nginx/nginx.conf</p>
 <p>Changing the default port<br>The nginx default port is 8080, we shall change it to 80. First stop the nginx server if it is running by:</p>
 <p>$ sudo nginx -s stop</p>
@@ -1320,27 +1231,11 @@ location / {
     index  index.html index.htm;
 }
 </code></pre><p>Save configuration and start nginx by<br>$ sudo nginx</p>
-<p>Changing the path of defualt web location</p>
-<p>The nginx html folder (brew install only) is by the defult in:</p>
-<p>/usr/local/Cellar/nginx/1.2.3/html<br>Note: change 1.2.3 to your nginx version.</p>
-<p>The defualt path configuration:</p>
-<p>/usr/local/etc/nginx/nginx.conf<br>server {<br>    listen       80;<br>    server_name  localhost;</p>
-<pre><code>#access_log  logs/host.access.log  main;
-
-location / {
-    root   html;
-    index  index.html index.htm;
-}
-</code></pre><p>/usr/local/etc/nginx/nginx.conf<br>server {<br>    listen       80;<br>    server_name  localhost;</p>
-<pre><code>#access_log  logs/host.access.log  main;
-
-location / {
-    root   /Users/xajler/www;
-    index  index.html index.htm;
-}
-</code></pre><p>After change stop and start nginix server and nginx is now serving pages from your custom folder!</p>
-
-          
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/06/28/install-nginx-mac/#more" rel="contents">
+              閱讀全文 &raquo;
+            </a>
+          </div>
         
       
     </div>
