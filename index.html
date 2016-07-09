@@ -323,34 +323,17 @@
 
       
         
-          
-            <p>NoSQL Movement</p>
-<p>To deal with the increase in concurrent users (Big Users) and the amount of data (Big Data), applications and their underlying databases need to scale using one of two choices: scale up or scale out. Scaling up implies a centralized approach that relies on bigger and bigger servers. Scaling out implies a distributed approach that leverages many standard, commodity physical or virtual servers.</p>
+          <h4 id="NoSQL-Movement"><a href="#NoSQL-Movement" class="headerlink" title="NoSQL Movement"></a>NoSQL Movement</h4><p>To deal with the increase in concurrent users (Big Users) and the amount of data (Big Data), applications and their underlying databases need to scale using one of two choices: scale up or scale out. Scaling up implies a centralized approach that relies on bigger and bigger servers. Scaling out implies a distributed approach that leverages many standard, commodity physical or virtual servers.</p>
 <p>Prior to NoSQL databases, the default approach was to scale up. This was dictated by the fundamentally centralized, shared-everything architecture of relational database technology. To support more concurrent users and/or store more data, we need a bigger and bigger server with more CPUs, more memory, and more disk storage to keep all the tables.</p>
 <p>NoSQL databases were developed from the ground up to be distributed, scale out databases. They use a cluster of standard, physical or virtual servers to store data and support database operations. To scale, additional servers are joined to the cluster and the data and database operations are spread across the larger cluster.</p>
 <p>NoSQL databases provide a much easier, linear approach to database scaling at low cost of commodity servers. If 10,000 new users start using your application, simply add another database server to your cluster. Add ten thousand more users and add another server. There’s no need to modify the application as you scale since the application always sees a single (distributed) database. Since commodity servers are expected to fail from time-to-time, NoSQL databases are built to tolerate and recover from such failure making them highly reliable.</p>
 <p>NoSQL database is defined as Next Generation Databases mostly addressing some of the points: being non-relational, distributed, open-source and horizontally scalable</p>
 <p>There are around 150 NoSQL systems available at present in the market. Each One comes with its own merits and demerits. This post briefly talks about Cassandra and it’s core features.</p>
-<p>Cassandra</p>
-<p>Cassandra stands out as one of the best available NoSQL databases because of it’s core features as stated below.</p>
-<p>Scalability</p>
-<p>Cassandra is an example of ideal horizontally scalable (scale out) system by allowing for seamless addition of nodes. As you need more capacity, you add nodes to the cluster and the cluster will utilize the new resources automatically. With this amount of flexibility, one can deploy efficiently on commodity servers or cloud based infrastructure.</p>
-<p>Highly Available</p>
-<p>Cassandra designed to handle very large amounts of data spread across many commodity servers with no single point of failure. Every node is same and no node is assigned special responsibilities. Data is distributed across the cluster (so each node contains different data), but there is no master as every node can service any request.</p>
-<p>Replication</p>
-<p>Cassandra is designed as a distributed system, for deployment of large numbers of nodes across multiple data centers. Cassandra’s distributed architecture is specifically tailored for multiple-data center deployment, for redundancy, for fail-over and disaster recovery. Replication strategies are configurable.</p>
-<p>Fault-tolerant</p>
-<p>Data is automatically replicated to multiple nodes for fault-tolerance. Replication across multiple data centers is supported. Failed nodes can be replaced with no downtime.</p>
-<p>Tunable consistency</p>
-<p>In Cassandra, consistency refers to how up-to-date and synchronized a row of data is on all of its replicas. Cassandra extends the concept of eventual consistency by offering tunable consistency. For any given read or write operation, the client application decides how consistent the requested data should be. In addition to tunable consistency, Cassandra has a number of built-in repair mechanisms to ensure that data remains consistent across replicas.</p>
-<p>Read/Write Performace</p>
-<p>Cassandra reads, as well as writes, data by primary key, eliminating complex queries required by a relational database. Cassandra is optimized for very fast and highly available data writing.</p>
-<p>Flexible schema</p>
-<p>Cassandra is perfect for managing large amounts of structured, semi-structured, and unstructured data across multiple data centers and the cloud.</p>
-<p>Query Language</p>
-<p>CQL (Cassandra Query Language) was introduced, a SQL-like alternative to the traditional RPC interface. Drivers are available for Python, PHP, Ruby, Node.js, and JDBC-based client programs</p>
-
-          
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/07/09/An-introduction-to-Cassandra/#more" rel="contents">
+              閱讀全文 &raquo;
+            </a>
+          </div>
         
       
     </div>
@@ -448,41 +431,16 @@
 
       
         
-          
-            <p>According to Brewer’s CAP theorem, it is impossible for any distributed computer system to simultaneously provide all three of Consistency, Availability and Partition Tolerance. You can’t have the three at the same time and get an acceptable latency.</p>
+          <p>According to Brewer’s CAP theorem, it is impossible for any distributed computer system to simultaneously provide all three of Consistency, Availability and Partition Tolerance. You can’t have the three at the same time and get an acceptable latency.</p>
 <p> <img src="img/cap.jpg" alt=""></p>
 <p>Cassandra values Availability and Partitioning tolerance (AP). Trade-offs between consistency and latency are tunable in Cassandra. You can get strong consistency with Cassandra (with an increased latency).</p>
 <p>Cassandra extends the concept of eventual consistency. Eventual consistency implies the storage system guarantees that if no new updates are made to the object, eventually all accesses will return the last updated value.</p>
 <p>How does C* know which record in the cluster is the latest one?</p>
-<p>Each Column Family is composed of rows of row metadata and columns. A Column is the smallest increment of data in Cassandra. It is a tuple containing a name, a value and a timestamp. Cassandra uses the column timestamp to determine the most recent update to a column. The timestamp is provided by the client application. The latest timestamp always wins when requesting data, so if multiple client sessions update the same columns in a row concurrently, the most recent update is the one that will eventually persist.</p>
-<p>C* provides tunable consistency by allowing to set the replication factor, replica placement strategy and consistency level.</p>
-<p>Replication factor</p>
-<p>Replication factor is total number of replicas across the cluster. So, a replication factor of 2 implies that there are two copies of each row and each copy is on a different node. All replicas are equally important; there is no primary or master replica.</p>
-<p>As a general rule, the replication factor should not exceed the number of nodes in the cluster. However, you can increase the replication factor and then add the desired number of nodes afterwards.</p>
-<p>When replication factor exceeds the number of nodes, writes are rejected, but reads are served as long as the desired consistency level can be met.</p>
-<p>Consistency level</p>
-<p>Consistency level is used to decide the number and location of nodes to which a write must be written to the commit log and memory table of. In case of read, Consistency level is used to decide the number and location of nodes whose responses must be compared for fetching the most recent record.</p>
-<p>The Consistency Levels in C* are ONE, TWO, THREE, QUORUM, LOCAL_QUORUM, EACH_QUORUM, ALL, ANY.</p>
-<pre><code>ONE, TWO and THREE imply the number each represents.
-
-QUORUM =&gt;  a quorum of replica nodes
-
-LOCAL_QUORUM =&gt; a quorum of replica nodes in the same data center as the coordinator node.
-
-EACH_QUORUM =&gt; a quorum of replica nodes in all data centers.
-
-ALL =&gt; all replica nodes in the cluster
-
-ANY =&gt; at least one nodes in the cluster
-</code></pre><p>The size of the quorum is calculated as (replication_factor / 2) + 1</p>
-<p>Selecting a Consistency Level</p>
-<p>Consistency level “ANY” should only be used where the absolute requirement is that a write never fails. This consistency level has the highest probability of a read not returning the latest written values.</p>
-<p>For write operations, ANY is the lowest consistency (but highest availability), and ALL is the highest consistency (but lowest availability).</p>
-<p>For read operations, ONE is the lowest consistency (but highest availability), and ALL is the highest consistency (but lowest availability).</p>
-<p>QUORUM is a good middle-ground ensuring strong consistency, yet still tolerating some level of failure.</p>
-<p>In multi data center clusters,  contacting multiple data centers for a read or write request can slow down the response. The consistency level LOCAL_QUORUM is specifically designed for doing quorum reads and writes in multi data center clusters.</p>
-
-          
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/07/09/Consistency-Tuning-In-Cassandra/#more" rel="contents">
+              閱讀全文 &raquo;
+            </a>
+          </div>
         
       
     </div>
@@ -580,8 +538,7 @@ ANY =&gt; at least one nodes in the cluster
 
       
         
-          
-            <p>I want to query data filtering by composite keys other than Row Key in CQL3. These are my queries:</p>
+          <p>I want to query data filtering by composite keys other than Row Key in CQL3. These are my queries:</p>
 <pre><code>CREATE TABLE grades (id int,
   date timestamp,
   subject text,
@@ -592,11 +549,12 @@ ANY =&gt; at least one nodes in the cluster
 <pre><code>SELECT * FROM grades where id = 1098; //works fine
 SELECT * FROM grades where subject = &apos;English&apos; ALLOW FILTERING; //works fine
 SELECT * FROM grades where status = &apos;Active&apos; ALLOW FILTERING; //gives an error
-</code></pre><p>Bad Request: PRIMARY KEY part status cannot be restricted (preceding part subject is either not restricted or by a non-EQ relation)<br>Just to experiment, I shuffled the keys around keeping ‘id’ as my Primary Row Key always. I am always ONLY able to query using either the Primary Row key or the second key, considering above example, if I swap subjects and status in Primary Key list, I can then query with status but I get similar error if I try to do by subject or by time.<br>Am I doing something wrong? Can I not query data using any other composite key in CQL3? I’m using Cassandra 1.2.6 and CQL3.<br>Answers<br>That looks all normal behavior according to Cassandra Composite Key model (<a href="http://www.datastax.com/docs/1.2/cql_cli/cql/SELECT" target="_blank" rel="external">http://www.datastax.com/docs/1.2/cql_cli/cql/SELECT</a>). Cassandra data model aims (and this is a general NoSQL way of thinking) at granting that queries are performant, that comes to the expense of “restrictions” on the way you store and index your data, and then how you query it, namely you “always need to restrict the preceding part of subject” on the primary key.<br>You cannot swap elements on the primary key list on the queries (that is more a SQL way of thinking). You always need to “Constraint”/“Restrict” the previous element of the primary key if you are to use multiple elements of the composite key. This means that if you have composite key = (id, subject, status, date) and want to query “status”, you will need to restrict “id” and/or “subject” (“or” is possible in case you use “allow filtering”, i.e., you can restrict only “subject” and do not need to restrict “id”). So, if you want to query on “status” you will b able to query in two different ways:<br>select * from grades where id = ‘1093’ and subject = ‘English’ and status = ‘Active’;<br>Or</p>
-<pre><code>select * from grades where subject = &apos;English&apos; and status = &apos;Active&apos; allow filtering;
-</code></pre><p>The first is for a specific “student”, the second for all the “students” on the subject in status = “Active”.</p>
-
-          
+</code></pre><p>Bad Request: PRIMARY KEY part status cannot be restricted (preceding part subject is either not restricted or by a non-EQ relation)<br>Just to experiment, I shuffled the keys around keeping ‘id’ as my Primary Row Key always. I am always ONLY able to query using either the Primary Row key or the second key, considering above example, if I swap subjects and status in Primary Key list, I can then query with status but I get similar error if I try to do by subject or by time.<br>Am I doing something wrong? Can I not query data using any other composite key in CQL3? I’m using Cassandra 1.2.6 and CQL3.</p>
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/07/08/cassandra-query-using-composite-keys/#more" rel="contents">
+              閱讀全文 &raquo;
+            </a>
+          </div>
         
       
     </div>
@@ -694,8 +652,7 @@ SELECT * FROM grades where status = &apos;Active&apos; ALLOW FILTERING; //gives 
 
       
         
-          
-            <p>While discussing with people at the London C* Summit, I realized that it was not always clear for them why Cassandra requires ALLOW FILTERING for some CQL queries and not for some others.</p>
+          <p>While discussing with people at the London C* Summit, I realized that it was not always clear for them why Cassandra requires ALLOW FILTERING for some CQL queries and not for some others.</p>
 <p>Why ALLOW FILTERING?</p>
 <p>Let’s take for example the following table:</p>
 <pre><code>CREATE TABLE blogs (blogId int, 
@@ -713,22 +670,11 @@ SELECT * FROM grades where status = &apos;Active&apos; ALLOW FILTERING; //gives 
 <p>Bad Request: Cannot execute this query as it might involve data filtering and thus may have unpredictable performance. If you want to execute this query despite the performance unpredictability, use ALLOW FILTERING.<br>Cassandra knows that it might not be able to execute the query in an efficient way. It is therefore warning you: “Be careful. Executing this query as such might not be a good idea as it can use a lot of your computing resources”.</p>
 <p>The only way Cassandra can execute this query is by retrieving all the rows from the table blogs and then by filtering out the ones which do not have the requested value for the time1 column.</p>
 <p>If your table contains for example a 1 million rows and 95% of them have the requested value for the time1 column, the query will still be relatively efficient and you should use ALLOW FILTERING.</p>
-<p>On the other hand, if your table contains 1 million rows and only 2 rows contain the requested value for the time1 column, your query is extremely inefficient. Cassandra will load 999, 998 rows for nothing. If the query is often used, it is probably better to add an index on the time1 column.</p>
-<p>Unfortunately, Cassandra has no way to differentiate between the 2 cases above as they are depending on the data distribution of the table.  Cassandra is therefore warning you and relying on you to make the good choice.</p>
-<p>Secondary indices and ALLOW FILTERING</p>
-<p>If we add an index on the author column and execute the following query:</p>
-<pre><code>SELECT * FROM blogs WHERE author = ‘Jonathan Ellis’;
-</code></pre><p>Cassandra will return all the blogs that have been written by Jonathan and will not request ALLOW FILTERING. This is due to the fact that Cassandra can use the secondary index on the author column to find the matching rows and does not need to perform any filtering.</p>
-<p>But if we execute the following one:</p>
-<pre><code>SELECT * FROM blogs WHERE author=’Jonathan Ellis’ and time2 = 1418306451235;
-</code></pre><p>Cassandra will request ALLOW FILTERING as it will have to first find and load the rows containing Jonathan as author, and then to filter out the ones which do not have a time2 column equal to the specified value.</p>
-<p>Adding an index on time2 might improve the query performance. Cassandra will then use the index with the highest selectivity to find the rows that need to be loaded. It will however not change anything regarding the need for ALLOW FILTERING, as it will still have to filter the loaded rows using the remaining predicate.</p>
-<p>Making the right choice</p>
-<p>When your query is rejected by Cassandra because it needs filtering, you should resist the urge to just add ALLOW FILTERING to it. You should think about your data, your model and what you are trying to do.</p>
-<p>You always have multiple options. You can change your data model, add an index, use another table or use ALLOW FILTERING.</p>
-<p>You have to make the right choice for your specific use case.</p>
-
-          
+          <div class="post-more-link text-center">
+            <a class="btn" href="/2016/07/08/cassandra-ALLOW-FILTERING/#more" rel="contents">
+              閱讀全文 &raquo;
+            </a>
+          </div>
         
       
     </div>

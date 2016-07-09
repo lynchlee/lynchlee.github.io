@@ -84,19 +84,16 @@
 
 
 
-<meta name="description" content="NoSQL Movement
-To deal with the increase in concurrent users (Big Users) and the amount of data (Big Data), applications and their underlying databases need to scale using one of two choices: scale up">
+<meta name="description" content="NoSQL MovementTo deal with the increase in concurrent users (Big Users) and the amount of data (Big Data), applications and their underlying databases need to scale using one of two choices: scale up">
 <meta property="og:type" content="article">
 <meta property="og:title" content="An introduction to Cassandra">
 <meta property="og:url" content="http://kenshinn.net/2016/07/09/An-introduction-to-Cassandra/index.html">
 <meta property="og:site_name" content="剣の心 の Blog">
-<meta property="og:description" content="NoSQL Movement
-To deal with the increase in concurrent users (Big Users) and the amount of data (Big Data), applications and their underlying databases need to scale using one of two choices: scale up">
-<meta property="og:updated_time" content="2016-07-09T09:57:43.000Z">
+<meta property="og:description" content="NoSQL MovementTo deal with the increase in concurrent users (Big Users) and the amount of data (Big Data), applications and their underlying databases need to scale using one of two choices: scale up">
+<meta property="og:updated_time" content="2016-07-09T10:02:17.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="An introduction to Cassandra">
-<meta name="twitter:description" content="NoSQL Movement
-To deal with the increase in concurrent users (Big Users) and the amount of data (Big Data), applications and their underlying databases need to scale using one of two choices: scale up">
+<meta name="twitter:description" content="NoSQL MovementTo deal with the increase in concurrent users (Big Users) and the amount of data (Big Data), applications and their underlying databases need to scale using one of two choices: scale up">
 
 
 
@@ -321,31 +318,22 @@ To deal with the increase in concurrent users (Big Users) and the amount of data
       
 
       
-        <p>NoSQL Movement</p>
-<p>To deal with the increase in concurrent users (Big Users) and the amount of data (Big Data), applications and their underlying databases need to scale using one of two choices: scale up or scale out. Scaling up implies a centralized approach that relies on bigger and bigger servers. Scaling out implies a distributed approach that leverages many standard, commodity physical or virtual servers.</p>
+        <h4 id="NoSQL-Movement"><a href="#NoSQL-Movement" class="headerlink" title="NoSQL Movement"></a>NoSQL Movement</h4><p>To deal with the increase in concurrent users (Big Users) and the amount of data (Big Data), applications and their underlying databases need to scale using one of two choices: scale up or scale out. Scaling up implies a centralized approach that relies on bigger and bigger servers. Scaling out implies a distributed approach that leverages many standard, commodity physical or virtual servers.</p>
 <p>Prior to NoSQL databases, the default approach was to scale up. This was dictated by the fundamentally centralized, shared-everything architecture of relational database technology. To support more concurrent users and/or store more data, we need a bigger and bigger server with more CPUs, more memory, and more disk storage to keep all the tables.</p>
 <p>NoSQL databases were developed from the ground up to be distributed, scale out databases. They use a cluster of standard, physical or virtual servers to store data and support database operations. To scale, additional servers are joined to the cluster and the data and database operations are spread across the larger cluster.</p>
 <p>NoSQL databases provide a much easier, linear approach to database scaling at low cost of commodity servers. If 10,000 new users start using your application, simply add another database server to your cluster. Add ten thousand more users and add another server. There’s no need to modify the application as you scale since the application always sees a single (distributed) database. Since commodity servers are expected to fail from time-to-time, NoSQL databases are built to tolerate and recover from such failure making them highly reliable.</p>
 <p>NoSQL database is defined as Next Generation Databases mostly addressing some of the points: being non-relational, distributed, open-source and horizontally scalable</p>
 <p>There are around 150 NoSQL systems available at present in the market. Each One comes with its own merits and demerits. This post briefly talks about Cassandra and it’s core features.</p>
-<p>Cassandra</p>
-<p>Cassandra stands out as one of the best available NoSQL databases because of it’s core features as stated below.</p>
-<p>Scalability</p>
-<p>Cassandra is an example of ideal horizontally scalable (scale out) system by allowing for seamless addition of nodes. As you need more capacity, you add nodes to the cluster and the cluster will utilize the new resources automatically. With this amount of flexibility, one can deploy efficiently on commodity servers or cloud based infrastructure.</p>
-<p>Highly Available</p>
-<p>Cassandra designed to handle very large amounts of data spread across many commodity servers with no single point of failure. Every node is same and no node is assigned special responsibilities. Data is distributed across the cluster (so each node contains different data), but there is no master as every node can service any request.</p>
-<p>Replication</p>
-<p>Cassandra is designed as a distributed system, for deployment of large numbers of nodes across multiple data centers. Cassandra’s distributed architecture is specifically tailored for multiple-data center deployment, for redundancy, for fail-over and disaster recovery. Replication strategies are configurable.</p>
-<p>Fault-tolerant</p>
-<p>Data is automatically replicated to multiple nodes for fault-tolerance. Replication across multiple data centers is supported. Failed nodes can be replaced with no downtime.</p>
-<p>Tunable consistency</p>
-<p>In Cassandra, consistency refers to how up-to-date and synchronized a row of data is on all of its replicas. Cassandra extends the concept of eventual consistency by offering tunable consistency. For any given read or write operation, the client application decides how consistent the requested data should be. In addition to tunable consistency, Cassandra has a number of built-in repair mechanisms to ensure that data remains consistent across replicas.</p>
-<p>Read/Write Performace</p>
-<p>Cassandra reads, as well as writes, data by primary key, eliminating complex queries required by a relational database. Cassandra is optimized for very fast and highly available data writing.</p>
-<p>Flexible schema</p>
-<p>Cassandra is perfect for managing large amounts of structured, semi-structured, and unstructured data across multiple data centers and the cloud.</p>
-<p>Query Language</p>
-<p>CQL (Cassandra Query Language) was introduced, a SQL-like alternative to the traditional RPC interface. Drivers are available for Python, PHP, Ruby, Node.js, and JDBC-based client programs</p>
+<a id="more"></a>
+<h4 id="Cassandra"><a href="#Cassandra" class="headerlink" title="Cassandra"></a>Cassandra</h4><p>Cassandra stands out as one of the best available NoSQL databases because of it’s core features as stated below.</p>
+<h5 id="Scalability"><a href="#Scalability" class="headerlink" title="Scalability"></a>Scalability</h5><p>Cassandra is an example of ideal horizontally scalable (scale out) system by allowing for seamless addition of nodes. As you need more capacity, you add nodes to the cluster and the cluster will utilize the new resources automatically. With this amount of flexibility, one can deploy efficiently on commodity servers or cloud based infrastructure.</p>
+<h5 id="Highly-Available"><a href="#Highly-Available" class="headerlink" title="Highly Available"></a>Highly Available</h5><p>Cassandra designed to handle very large amounts of data spread across many commodity servers with no single point of failure. Every node is same and no node is assigned special responsibilities. Data is distributed across the cluster (so each node contains different data), but there is no master as every node can service any request.</p>
+<h5 id="Replication"><a href="#Replication" class="headerlink" title="Replication"></a>Replication</h5><p>Cassandra is designed as a distributed system, for deployment of large numbers of nodes across multiple data centers. Cassandra’s distributed architecture is specifically tailored for multiple-data center deployment, for redundancy, for fail-over and disaster recovery. Replication strategies are configurable.</p>
+<h5 id="Fault-tolerant"><a href="#Fault-tolerant" class="headerlink" title="Fault-tolerant"></a>Fault-tolerant</h5><p>Data is automatically replicated to multiple nodes for fault-tolerance. Replication across multiple data centers is supported. Failed nodes can be replaced with no downtime.</p>
+<h5 id="Tunable-consistency"><a href="#Tunable-consistency" class="headerlink" title="Tunable consistency"></a>Tunable consistency</h5><p>In Cassandra, consistency refers to how up-to-date and synchronized a row of data is on all of its replicas. Cassandra extends the concept of eventual consistency by offering tunable consistency. For any given read or write operation, the client application decides how consistent the requested data should be. In addition to tunable consistency, Cassandra has a number of built-in repair mechanisms to ensure that data remains consistent across replicas.</p>
+<h5 id="Read-Write-Performace"><a href="#Read-Write-Performace" class="headerlink" title="Read/Write Performace"></a>Read/Write Performace</h5><p>Cassandra reads, as well as writes, data by primary key, eliminating complex queries required by a relational database. Cassandra is optimized for very fast and highly available data writing.</p>
+<h5 id="Flexible-schema"><a href="#Flexible-schema" class="headerlink" title="Flexible schema"></a>Flexible schema</h5><p>Cassandra is perfect for managing large amounts of structured, semi-structured, and unstructured data across multiple data centers and the cloud.</p>
+<h5 id="Query-Language"><a href="#Query-Language" class="headerlink" title="Query Language"></a>Query Language</h5><p>CQL (Cassandra Query Language) was introduced, a SQL-like alternative to the traditional RPC interface. Drivers are available for Python, PHP, Ruby, Node.js, and JDBC-based client programs</p>
 
       
     </div>
@@ -553,7 +541,7 @@ To deal with the increase in concurrent users (Big Users) and the amount of data
               
             
             
-              <p class="post-toc-empty">此文章未包含目錄</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#NoSQL-Movement"><span class="nav-number">1.</span> <span class="nav-text">NoSQL Movement</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Cassandra"><span class="nav-number">2.</span> <span class="nav-text">Cassandra</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#Scalability"><span class="nav-number">2.1.</span> <span class="nav-text">Scalability</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Highly-Available"><span class="nav-number">2.2.</span> <span class="nav-text">Highly Available</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Replication"><span class="nav-number">2.3.</span> <span class="nav-text">Replication</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Fault-tolerant"><span class="nav-number">2.4.</span> <span class="nav-text">Fault-tolerant</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Tunable-consistency"><span class="nav-number">2.5.</span> <span class="nav-text">Tunable consistency</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Read-Write-Performace"><span class="nav-number">2.6.</span> <span class="nav-text">Read/Write Performace</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Flexible-schema"><span class="nav-number">2.7.</span> <span class="nav-text">Flexible schema</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Query-Language"><span class="nav-number">2.8.</span> <span class="nav-text">Query Language</span></a></li></ol></li></ol></div>
             
           </div>
         </section>

@@ -92,7 +92,7 @@ Why ALLOW FI">
 <meta property="og:site_name" content="剣の心 の Blog">
 <meta property="og:description" content="While discussing with people at the London C* Summit, I realized that it was not always clear for them why Cassandra requires ALLOW FILTERING for some CQL queries and not for some others.
 Why ALLOW FI">
-<meta property="og:updated_time" content="2016-07-08T07:10:41.000Z">
+<meta property="og:updated_time" content="2016-07-09T10:02:28.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ALLOW FILTERING explained">
 <meta name="twitter:description" content="While discussing with people at the London C* Summit, I realized that it was not always clear for them why Cassandra requires ALLOW FILTERING for some CQL queries and not for some others.
@@ -339,6 +339,7 @@ Why ALLOW FI">
 <p>Bad Request: Cannot execute this query as it might involve data filtering and thus may have unpredictable performance. If you want to execute this query despite the performance unpredictability, use ALLOW FILTERING.<br>Cassandra knows that it might not be able to execute the query in an efficient way. It is therefore warning you: “Be careful. Executing this query as such might not be a good idea as it can use a lot of your computing resources”.</p>
 <p>The only way Cassandra can execute this query is by retrieving all the rows from the table blogs and then by filtering out the ones which do not have the requested value for the time1 column.</p>
 <p>If your table contains for example a 1 million rows and 95% of them have the requested value for the time1 column, the query will still be relatively efficient and you should use ALLOW FILTERING.</p>
+<a id="more"></a>
 <p>On the other hand, if your table contains 1 million rows and only 2 rows contain the requested value for the time1 column, your query is extremely inefficient. Cassandra will load 999, 998 rows for nothing. If the query is often used, it is probably better to add an index on the time1 column.</p>
 <p>Unfortunately, Cassandra has no way to differentiate between the 2 cases above as they are depending on the data distribution of the table.  Cassandra is therefore warning you and relying on you to make the good choice.</p>
 <p>Secondary indices and ALLOW FILTERING</p>
