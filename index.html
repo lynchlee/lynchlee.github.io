@@ -273,6 +273,315 @@
             
               
                 
+                <a class="post-title-link" href="/2016/07/09/CQL-DataType-for-Cassandra/" itemprop="url">
+                  CQL DataType for Cassandra
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">發表於</span>
+            <time itemprop="dateCreated" datetime="2016-07-09T18:29:30+08:00" content="2016-07-09">
+              2016-07-09
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/09/CQL-DataType-for-Cassandra/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/09/CQL-DataType-for-Cassandra/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h4 id="CQL-data-types"><a href="#CQL-data-types" class="headerlink" title="CQL data types"></a>CQL data types</h4><p>CQL defines built-in data types for columns. The counter type is unique.</p>
+<h6 id="CQL-Type"><a href="#CQL-Type" class="headerlink" title="CQL Type"></a>CQL Type</h6><table>
+<thead>
+<tr>
+<th>CQL Type</th>
+<th>Constants</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ascii</td>
+<td>strings</td>
+<td>US-ASCII character string</td>
+</tr>
+<tr>
+<td>bigint</td>
+<td>integers</td>
+<td>64-bit signed long</td>
+</tr>
+<tr>
+<td>blob</td>
+<td>blobs</td>
+<td>Arbitrary bytes (no validation), expressed as hexadecimal</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>booleans</td>
+<td>true or false</td>
+</tr>
+<tr>
+<td>counter</td>
+<td>integers</td>
+<td>Distributed counter value (64-bit long)</td>
+</tr>
+<tr>
+<td>decimal</td>
+<td>integers, floats</td>
+<td>Variable-precision decimal Java type Note: When dealing with currency, it is a best practice to have a currency class that serializes to and from an int or use the Decimal form.</td>
+</tr>
+<tr>
+<td>double</td>
+<td>integers, floats</td>
+<td>64-bit IEEE-754 floating point Java type</td>
+</tr>
+<tr>
+<td>float</td>
+<td>integers, floats</td>
+<td>32-bit IEEE-754 floating point Java type</td>
+</tr>
+<tr>
+<td>frozen</td>
+<td>tuples, collections, user-defined types</td>
+<td>A frozen value serializes multiple components into a single value. Non-frozen types allow updates to individual fields. Cassandra treats the value of a frozen type as a blob. The entire value must be overwritten.Note: Cassandra 2.1.0 to 2.1.2 requires using frozen for tuples:frozen <tuple <int,="" tuple<text,="" double="">&gt;&gt; Cassandra 2.1.3+ does not require this keyword for tuples.</tuple></td>
+</tr>
+<tr>
+<td>inet</td>
+<td>strings</td>
+<td>IP address string in IPv4 or IPv6 format, used by the python-cql driver and CQL native protocols</td>
+</tr>
+<tr>
+<td>int</td>
+<td>integers</td>
+<td>32-bit signed integer</td>
+</tr>
+<tr>
+<td>list</td>
+<td>n/a</td>
+<td>A collection of one or more ordered elements</td>
+</tr>
+<tr>
+<td>map</td>
+<td>n/a</td>
+<td>A JSON-style array of literals: { literal : literal, literal : literal … }</td>
+</tr>
+<tr>
+<td>set</td>
+<td>n/a</td>
+<td>A collection of one or more elements</td>
+</tr>
+<tr>
+<td>text</td>
+<td>strings</td>
+<td>UTF-8 encoded string</td>
+</tr>
+<tr>
+<td>timestamp</td>
+<td>integers, strings</td>
+<td>Date plus time, encoded as 8 bytes since epoch</td>
+</tr>
+<tr>
+<td>timeuuid</td>
+<td>uuids</td>
+<td>Type 1 UUID only</td>
+</tr>
+<tr>
+<td>tuple</td>
+<td>n/a</td>
+<td>Cassandra 2.1 and later. A group of 2-3 fields.</td>
+</tr>
+<tr>
+<td>uuid</td>
+<td>uuids</td>
+<td>A UUID in standard UUID format</td>
+</tr>
+<tr>
+<td>varchar</td>
+<td>strings</td>
+<td>UTF-8 encoded string</td>
+</tr>
+<tr>
+<td>varint</td>
+<td>integers</td>
+<td>Arbitrary-precision integer Java type </td>
+</tr>
+</tbody>
+</table>
+<p>In addition to the CQL types listed in this table, you can use a string containing the name of a JAVA class (a sub-class of AbstractType loadable by Cassandra) as a CQL type. The class name should either be fully qualified or relative to the org.apache.cassandra.db.marshal package.</p>
+<p>Enclose ASCII text, timestamp, and inet values in single quotation marks. Enclose names of a keyspace, table, or column in double quotation marks.</p>
+<h5 id="Java-types"><a href="#Java-types" class="headerlink" title="Java types"></a>Java types</h5><p>The Java types, from which most CQL types are derived, are obvious to Java programmers. The derivation of the following types, however, might not be obvious:<br>Derivation of selective CQL types</p>
+<table>
+<thead>
+<tr>
+<th>CQL type</th>
+<th>Java type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>decimal</td>
+<td>java.math.BigDecimal</td>
+</tr>
+<tr>
+<td>float</td>
+<td>java.lang.Float</td>
+</tr>
+<tr>
+<td>double</td>
+<td>java.lang.Double</td>
+</tr>
+<tr>
+<td>varint</td>
+<td>java.math.BigInteger</td>
+</tr>
+</tbody>
+</table>
+<h5 id="CQL-type-compatibility"><a href="#CQL-type-compatibility" class="headerlink" title="CQL type compatibility"></a>CQL type compatibility</h5><p>CQL data types have strict requirements for conversion compatibility. The following table shows the allowed alterations for data types:</p>
+<table>
+<thead>
+<tr>
+<th>Data type may be altered to</th>
+<th>Data type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ascii, bigint, boolean, decimal, double, float, inet, int, timestamp, timeuuid, uuid, varchar, varint</td>
+<td>blob</td>
+</tr>
+<tr>
+<td>int</td>
+<td>varint</td>
+</tr>
+<tr>
+<td>text</td>
+<td>varchar</td>
+</tr>
+<tr>
+<td>timeuuid</td>
+<td>uuid</td>
+</tr>
+<tr>
+<td>varchar</td>
+<td>text</td>
+</tr>
+</tbody>
+</table>
+<p>Clustering columns have even stricter requirements, because clustering columns mandate the order in which data is written to disk. The following table shows the allow alterations for data types used in clustering columns:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">Data type may be altered to</th>
+<th>Data type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">int</td>
+<td>varint</td>
+</tr>
+<tr>
+<td style="text-align:left">text</td>
+<td>varchar</td>
+</tr>
+<tr>
+<td style="text-align:left">varchar</td>
+<td>text</td>
+</tr>
+</tbody>
+</table>
+<p>Topics in this section:</p>
+<h6 id="Blob-type"><a href="#Blob-type" class="headerlink" title="Blob type"></a>Blob type</h6><p>Cassandra blob data type represents a constant hexadecimal number.</p>
+<h6 id="Collection-type"><a href="#Collection-type" class="headerlink" title="Collection type"></a>Collection type</h6><p>A collection column is declared using the collection type, followed by another type.</p>
+<h6 id="Counter-type"><a href="#Counter-type" class="headerlink" title="Counter type"></a>Counter type</h6><p>A counter column value is a 64-bit signed integer.</p>
+<h6 id="UUID-and-timeuuid-types"><a href="#UUID-and-timeuuid-types" class="headerlink" title="UUID and timeuuid types"></a>UUID and timeuuid types</h6><p>The UUID (universally unique id) comparator type for avoiding collisions in column names.</p>
+<h6 id="uuid-and-Timeuuid-functions"><a href="#uuid-and-Timeuuid-functions" class="headerlink" title="uuid and Timeuuid functions"></a>uuid and Timeuuid functions</h6><p>About using Timeuuid functions.</p>
+<h6 id="Timestamp-type"><a href="#Timestamp-type" class="headerlink" title="Timestamp type"></a>Timestamp type</h6><p>A timestamp type can be entered as an integer for CQL input, or as a string literal in ISO 8601 formats.</p>
+<h6 id="Tuple-type"><a href="#Tuple-type" class="headerlink" title="Tuple type"></a>Tuple type</h6><p>You can use a tuple as a convenient alternative to a user-defined type.</p>
+<h6 id="User-defined-type"><a href="#User-defined-type" class="headerlink" title="User-defined type"></a>User-defined type</h6><p>A user-defined type facilitates handling multiple fields of related information in a table.</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/07/09/Composite-Keys-in-Cassandra/" itemprop="url">
                   Composite Keys in Cassandra
                 </a>
@@ -1385,107 +1694,6 @@ location / {
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/01/01/tomorrow-today/" itemprop="url">
-                  明年的今天
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">發表於</span>
-            <time itemprop="dateCreated" datetime="2016-01-01T03:52:52+08:00" content="2016-01-01">
-              2016-01-01
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/01/01/tomorrow-today/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/01/tomorrow-today/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>明年的今天, 你是谁.</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1531,7 +1739,7 @@ location / {
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">24</span>
+              <span class="site-state-item-count">25</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
