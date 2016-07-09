@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="功夫," />
+  <meta name="keywords" content="Cassandra," />
 
 
 
@@ -84,16 +84,19 @@
 
 
 
-<meta name="description" content="你懂得武功花样是不少，只可惜 杂而不纯,博而不精，我想问问你，在你懂的武功里哪一种你觉得最精湛呢?!   —- 金轮法王">
+<meta name="description" content="IntroductionA composite key consists of one or more primary key fields. Each field must be of data type supported by underlying data-store.
+In JPA (Java Persistence API), there are two ways of specify">
 <meta property="og:type" content="article">
-<meta property="og:title" content="金轮法王对早期杨过的武功评论">
-<meta property="og:url" content="http://kenshinn.net/2016/05/24/kongfu-of-yangguo/index.html">
+<meta property="og:title" content="Composite Keys in Cassandra">
+<meta property="og:url" content="http://kenshinn.net/2016/07/09/Composite-Keys-in-Cassandra/index.html">
 <meta property="og:site_name" content="剣の心 の Blog">
-<meta property="og:description" content="你懂得武功花样是不少，只可惜 杂而不纯,博而不精，我想问问你，在你懂的武功里哪一种你觉得最精湛呢?!   —- 金轮法王">
-<meta property="og:updated_time" content="2016-05-24T01:06:33.000Z">
+<meta property="og:description" content="IntroductionA composite key consists of one or more primary key fields. Each field must be of data type supported by underlying data-store.
+In JPA (Java Persistence API), there are two ways of specify">
+<meta property="og:updated_time" content="2016-07-09T10:25:57.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="金轮法王对早期杨过的武功评论">
-<meta name="twitter:description" content="你懂得武功花样是不少，只可惜 杂而不纯,博而不精，我想问问你，在你懂的武功里哪一种你觉得最精湛呢?!   —- 金轮法王">
+<meta name="twitter:title" content="Composite Keys in Cassandra">
+<meta name="twitter:description" content="IntroductionA composite key consists of one or more primary key fields. Each field must be of data type supported by underlying data-store.
+In JPA (Java Persistence API), there are two ways of specify">
 
 
 
@@ -111,7 +114,7 @@
   };
 </script>
 
-  <title> 金轮法王对早期杨过的武功评论 | 剣の心 の Blog </title>
+  <title> Composite Keys in Cassandra | 剣の心 の Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-hk">
@@ -271,7 +274,7 @@
             
             
               
-                金轮法王对早期杨过的武功评论
+                Composite Keys in Cassandra
               
             
           </h1>
@@ -283,8 +286,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">發表於</span>
-            <time itemprop="dateCreated" datetime="2016-05-24T09:04:33+08:00" content="2016-05-24">
-              2016-05-24
+            <time itemprop="dateCreated" datetime="2016-07-09T18:22:45+08:00" content="2016-07-09">
+              2016-07-09
             </time>
           </span>
 
@@ -294,8 +297,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/05/24/kongfu-of-yangguo/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/24/kongfu-of-yangguo/" itemprop="commentsCount"></span>
+                <a href="/2016/07/09/Composite-Keys-in-Cassandra/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/09/Composite-Keys-in-Cassandra/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -318,7 +321,119 @@
       
 
       
-        <p>你懂得武功花样是不少，只可惜 杂而不纯,博而不精，我想问问你，在你懂的武功里哪一种你觉得最精湛呢?!<br>   —- 金轮法王</p>
+        <h4 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h4><p>A composite key consists of one or more primary key fields. Each field must be of data type supported by underlying data-store.</p>
+<p>In JPA (Java Persistence API), there are two ways of specifying composite keys:</p>
+<ol>
+<li><p>Composite Primary Key:</p>
+<p> @Entity<br> @IdClass(TimelineId.class)<br> public class Timeline {</p>
+<pre><code>@Id int userId;
+@Id long tweetId;
+
+//Other non-primary key fields
+</code></pre><p> }<br> Class TimelineId {</p>
+<pre><code>int userId;
+long tweetId;
+</code></pre><p> }</p>
+</li>
+<li><p>Embedded Primary Key:</p>
+<p> @Entity<br> public class Timeline {</p>
+<pre><code>@EmbeddedId TimelineId id;
+</code></pre><p> //Other non-primary key fields<br> }</p>
+<p> @Embeddable<br> Class TimelineId {</p>
+<pre><code>int userId;
+long tweetId;
+</code></pre><p> }</p>
+</li>
+</ol>
+<p>Above Timeline entity is inspired from famous twissandra example. Starting 1.1 release, Cassandra supports composite keys.</p>
+<p>Cassandra Composite Keys in Action<br>Visit this page in order to understand Cassandra Schema in general. In this section I will give you a feel of how composite keys are stored in Cassandra.</p>
+<p>Let’s start Cassandra 1.1.x server and run following commands from Cassandra/bin directory:</p>
+<h5 id="CQL"><a href="#CQL" class="headerlink" title="CQL:"></a>CQL:</h5><pre><code>./cqlsh -3 localhost 9160
+
+CREATE KEYSPACE twissandra with strategy_class = &apos;SimpleStrategy&apos; and strategy_options:replication_factor=1;
+
+use twissandra;
+
+CREATE TABLE timeline(
+    user_id varchar,
+    tweet_id varchar,
+    tweet_device varchar,
+    author varchar,
+    body varchar,
+    PRIMARY KEY(user_id,tweet_id,tweet_device));
+
+INSERT INTO timeline (user_id, tweet_id, tweet_device, author, body) VALUES (&apos;xamry&apos;, &apos;t1&apos;, &apos;web&apos;, &apos;Amresh&apos;, &apos;Here is my first tweet&apos;);
+INSERT INTO timeline (user_id, tweet_id, tweet_device, author, body) VALUES (&apos;xamry&apos;, &apos;t2&apos;, &apos;sms&apos;, &apos;Saurabh&apos;, &apos;Howz life Xamry&apos;);
+INSERT INTO timeline (user_id, tweet_id, tweet_device, author, body) VALUES (&apos;mevivs&apos;, &apos;t1&apos;, &apos;iPad&apos;, &apos;Kuldeep&apos;, &apos;You der?&apos;);
+INSERT INTO timeline (user_id, tweet_id, tweet_device, author, body) VALUES (&apos;mevivs&apos;, &apos;t2&apos;, &apos;mobile&apos;, &apos;Vivek&apos;, &apos;Yep, I suppose&apos;);
+
+cqlsh:twissandra&gt; select * from timeline;
+ user_id | tweet_id | author  | body
+---------+----------+---------+------------------------
+   xamry |       t1 |  Amresh | Here is my first tweet
+   xamry |       t2 | Saurabh |        Howz life Xamry
+   mevivs |       t1 | Kuldeep |               You der?
+     mevivs |       t2 |   Vivek |         Yep, I suppose
+
+cqlsh:twissandra&gt; SELECT * FROM timeline WHERE user_id=&apos;xamry&apos;;
+ user_id | tweet_id | tweet_device | author  | body
+---------+----------+--------------+---------+------------------------
+   xamry |       t1 |          web |  Amresh | Here is my first tweet
+   xamry |       t2 |          sms | Saurabh |        Howz life Xamry
+
+cqlsh:twissandra&gt; select * from timeline where tweet_id = &apos;t1&apos;;
+ user_id | tweet_id | tweet_device | author  | body
+---------+----------+--------------+---------+------------------------
+   xamry |       t1 |          web |  Amresh | Here is my first tweet
+  mevivs |       t1 |         iPad | Kuldeep |               You der?
+
+cqlsh:twissandra&gt; select * from timeline where user_id = &apos;xamry&apos; and tweet_id=&apos;t1&apos;;
+ user_id | tweet_id | tweet_device | author | body
+---------+----------+--------------+--------+------------------------
+   xamry |       t1 |          web | Amresh | Here is my first tweet
+
+cqlsh:twissandra&gt; select * from timeline where user_id = &apos;xamry&apos; and author=&apos;Amresh&apos;;
+Bad Request: No indexed columns present in by-columns clause with Equal operator
+
+cqlsh:twissandra&gt; select * from timeline where user_id = &apos;xamry&apos; and tweet_device=&apos;web&apos;;
+Bad Request: PRIMARY KEY part tweet_device cannot be restricted (preceding part tweet_id is either not restricted or by a non-EQ relation)
+
+cqlsh:twissandra&gt; select * from timeline where user_id = &apos;xamry&apos; and tweet_id = &apos;t1&apos; and tweet_device=&apos;web&apos;;
+ user_id | tweet_id | tweet_device | author | body
+---------+----------+--------------+--------+------------------------
+   xamry |       t1 |          web | Amresh | Here is my first tweet
+</code></pre><h5 id="Cassandra-cli"><a href="#Cassandra-cli" class="headerlink" title="Cassandra-cli:"></a>Cassandra-cli:</h5><pre><code>impadmin@impetus-ubuntu:/usr/local/apache-cassandra-1.1.2/bin$ ./cassandra-cli -h localhost -p 9160
+Connected to: &quot;Test Cluster&quot; on localhost/9160
+Welcome to Cassandra CLI version 1.1.2
+
+Type &apos;help;&apos; or &apos;?&apos; for help.
+Type &apos;quit;&apos; or &apos;exit;&apos; to quit.
+
+[default@unknown] use twissandra;
+Authenticated to keyspace: twissandra
+[default@twissandra] list timeline;
+&lt;pre&gt;Using default limit of 100
+Using default column limit of 100
+-------------------
+RowKey: xamry
+=&gt; (column=t1:web:author, value=Amresh, timestamp=1343729388951000)
+=&gt; (column=t1:web:body, value=Here is my first tweet, timestamp=1343729388951001)
+=&gt; (column=t2:sms:author, value=Saurabh, timestamp=1343729388973000)
+=&gt; (column=t2:sms:body, value=Howz life Xamry, timestamp=1343729388973001)
+-------------------
+RowKey: mevivs
+=&gt; (column=t1:iPad:author, value=Kuldeep, timestamp=1343729388991000)
+=&gt; (column=t1:iPad:body, value=You der?, timestamp=1343729388991001)
+=&gt; (column=t2:mobile:author, value=Vivek, timestamp=1343729389941000)
+=&gt; (column=t2:mobile:body, value=Yep, I suppose, timestamp=1343729389941001)
+</code></pre><h4 id="Observations"><a href="#Observations" class="headerlink" title="Observations"></a>Observations</h4><ol>
+<li><p>First part of composite key (user_id) is called “Partition Key”, rest (tweet_id, tweet_device) are remaining keys.</p>
+</li>
+<li><p>Cassandra stores columns differently when composite keys are used. Partition key becomes row key. Remaining keys are concatenated with each column name  (“:” as separator) to form column names. Column values remain unchanged.</p>
+</li>
+<li><p>Remaining keys (other than partition keys) are ordered, and it’s not allowed to search on any random column, you have to start with the first one and then you can move to the second one and so on. This is evident from “Bad Request” error.</p>
+</li>
+</ol>
 
       
     </div>
@@ -340,7 +455,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/功夫/" rel="tag">#功夫</a>
+            <a href="/tags/Cassandra/" rel="tag">#Cassandra</a>
           
         </div>
       
@@ -349,17 +464,13 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/03/27/kafka-offset-monitor-setup/" rel="next" title="Kafka Offset Monitor Setup">
-                <i class="fa fa-chevron-left"></i> Kafka Offset Monitor Setup
+              <a href="/2016/07/09/An-introduction-to-Cassandra/" rel="next" title="An introduction to Cassandra">
+                <i class="fa fa-chevron-left"></i> An introduction to Cassandra
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/06/28/install-nginx-mac/" rel="prev" title="Installing Nginx in Mac OS X  With Homebrew">
-                Installing Nginx in Mac OS X  With Homebrew <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -388,8 +499,8 @@
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/05/24/kongfu-of-yangguo/"
-           data-title="金轮法王对早期杨过的武功评论" data-url="http://kenshinn.net/2016/05/24/kongfu-of-yangguo/">
+      <div class="ds-thread" data-thread-key="2016/07/09/Composite-Keys-in-Cassandra/"
+           data-title="Composite Keys in Cassandra" data-url="http://kenshinn.net/2016/07/09/Composite-Keys-in-Cassandra/">
       </div>
     
   </div>
@@ -530,7 +641,7 @@
               
             
             
-              <p class="post-toc-empty">此文章未包含目錄</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Introduction"><span class="nav-number">1.</span> <span class="nav-text">Introduction</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#CQL"><span class="nav-number">1.1.</span> <span class="nav-text">CQL:</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Cassandra-cli"><span class="nav-number">1.2.</span> <span class="nav-text">Cassandra-cli:</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Observations"><span class="nav-number">2.</span> <span class="nav-text">Observations</span></a></li></ol></div>
             
           </div>
         </section>
