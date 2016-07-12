@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Cassandra," />
 
 
 
@@ -84,15 +84,22 @@
 
 
 
-<meta name="description" content="この世は、强ければ生き、弱ければし。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="剣の心 の Blog">
-<meta property="og:url" content="http://kenshinn.net/categories/English/index.html">
+<meta name="description" content="So lets say you’re doing you’re best to data model all around one partition. You’ve done your homework and all you queries look like this:
+SELECT * FROM my_keyspace.users where id = 1
+Over time as fea">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cassandra Query Patterns-Not using the “in” query for multiple partitions.">
+<meta property="og:url" content="http://kenshinn.net/2016/07/12/Cassandra-Query-Patterns-Not-using-the-in-query–for-multiple-partitions/index.html">
 <meta property="og:site_name" content="剣の心 の Blog">
-<meta property="og:description" content="この世は、强ければ生き、弱ければし。">
+<meta property="og:description" content="So lets say you’re doing you’re best to data model all around one partition. You’ve done your homework and all you queries look like this:
+SELECT * FROM my_keyspace.users where id = 1
+Over time as fea">
+<meta property="og:updated_time" content="2016-07-12T09:27:45.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="剣の心 の Blog">
-<meta name="twitter:description" content="この世は、强ければ生き、弱ければし。">
+<meta name="twitter:title" content="Cassandra Query Patterns-Not using the “in” query for multiple partitions.">
+<meta name="twitter:description" content="So lets say you’re doing you’re best to data model all around one partition. You’ve done your homework and all you queries look like this:
+SELECT * FROM my_keyspace.users where id = 1
+Over time as fea">
 
 
 
@@ -110,7 +117,7 @@
   };
 </script>
 
-  <title> 分類: English | 剣の心 の Blog </title>
+  <title> Cassandra Query Patterns-Not using the “in” query for multiple partitions. | 剣の心 の Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-hk">
@@ -131,7 +138,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left  ">
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -249,54 +256,198 @@
           <div id="content" class="content">
             
 
-  <section id="posts" class="posts-collapse">
-    <div class="collection-title">
-      <h2 >
-        English
-        <small>分類</small>
-      </h2>
-    </div>
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
 
     
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Cassandra Query Patterns-Not using the “in” query for multiple partitions.
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">發表於</span>
+            <time itemprop="dateCreated" datetime="2016-07-12T17:24:20+08:00" content="2016-07-12">
+              2016-07-12
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/12/Cassandra-Query-Patterns-Not-using-the-in-query–for-multiple-partitions/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/12/Cassandra-Query-Patterns-Not-using-the-in-query–for-multiple-partitions/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
       
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+      
+        <p>So lets say you’re doing you’re best to data model all around one partition. You’ve done your homework and all you queries look like this:</p>
+<pre><code>SELECT * FROM my_keyspace.users where id = 1
+</code></pre><p>Over time as features are added however, you make some tradeoffs and need to start doing queries across partitions. At first there are only a few queries like this.</p>
+<pre><code>SELECT * FROM my_keyspace.users where id in (1,2,3,4)
+</code></pre><p>You’re cluster is well tuned so you have no problems, but as time goes on your dataset increases and users are doing bigger searches across more users.</p>
+<pre><code>SELECT * FROM my_keyspace.users where id in
+(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23)
+</code></pre><p>Now you start seeing GC pauses and heap pressure that leads to overall slower performance, your queries are coming back in what happened?</p>
+<p>Imagine the contrived scenario where we have a partition key with the values A,B,C with 9 nodes and a replication factor of 3. When I send in my query that looks like SELECT * FROM mykeyspace.mytable WHERE id IN (‘A’,’B’,C’) the coordinator has to do something like:</p>
+<p>in query</p>
+<p>In practical terms this means you’re waiting on this single coordinator node to give you a response, it’s keeping all those queries and their responses in the heap, and if one of those queries fails, or the coordinator fails, you have to retry the whole thing.</p>
+<p>failed in query</p>
+<p>This means a dead coordinator node means the entire query result is gone. Instead of trying to approach this like a relational database let’s embrace the distributed nature of Cassandra and send queries directly to the nodes that can get the best fastest answer.</p>
+<p>In Java</p>
+<pre><code>PreparedStatement statement = session.prepare(
+  &quot;SELECT * FROM tester.users where id = ?&quot;);
+List&lt;ResultSetFuture&gt; futures = new ArrayList&lt;&gt;();
+for (int i = 1; i &lt; 4; i++) {
+ ResultSetFuture resultSetFuture = session.executeAsync(statement.bind(i));
+ futures.add(resultSetFuture);
+}
+List&lt;String&gt; results = new ArrayList&lt;&gt;();
+for (ResultSetFuture future : futures){
+ ResultSet rows = future.getUninterruptibly();
+ Row row = rows.one();
+ results.add(row.getString(&quot;name&quot;));
+}
+return results;
+</code></pre><p>In C#</p>
+<pre><code>PreparedStatement statement = session.Prepare(&quot;SELECT * FROM tester.users where id = ?&quot;);
+List&lt;String&gt; names = new List&lt;String&gt;();
+for (int i = 1; i &lt; 4; i++)
+{
+  var resultSetFuture = session.ExecuteAsync(statement.Bind(i));
+  resultSetFuture.ContinueWith(t =&gt;
+                        {
+                            var result = t.Result.First();
+                            var name = result.GetValue&lt;String&gt;(&quot;name&quot;);
+                            names.Add(name);
+                        });
+  resultSetFuture.Wait();
 
-      <h1 class="post-title">
+}
+return names;
+</code></pre><p>Now doing a retry requires only one small fast query, you’ve eliminated the single point of failure.</p>
+<p>enter image description here</p>
+<p>With separate queries you get no single point of failure, faster reads, less pressure on the coordinator node, and better performance semantics when you have a nodes failing. It truly embraces the distributed nature of Cassandra.</p>
+<p>The “in” keyword has it’s place such as when querying INSIDE of a partition, but by and large it’s something I wish wasn’t doable across partitions, I fixed a good dozen performance problems with it so far, and I’ve yet to see it be faster than separate queries plus async.</p>
+<p>A note about distributed thinking</p>
+<p>This and my ‘no batch’ blog post really drive a bigger discussion about distributed thinking. Most things that don’t really work as well in a distributed database as people think they should, bulk loading via batch, in queries, and ‘rollbacks’ are left over vestiges from a single machine thinking.</p>
+<p>This highly consistent single machine world is easy to reason about, but it doesn’t scale easily, and has single points of failure, and when you do make the tradeoffs needed to scale, you find features like “in” queries don’t scale unless they happen to be all be on the same machine (like Cassandra). You’ll find when you try and scale highly consistent single machine technologies via sharding you run into the same problem set as we have with distributed databases, only without appropriate tools.</p>
+<p>So embrace continuous availability, multiple replicas, and leave behind yesterday’s approaches.</p>
+<h6 id="Related-Articles"><a href="#Related-Articles" class="headerlink" title="Related Articles:"></a>Related Articles:</h6><p>Cassandra: Batch Loading Without the Batch — The Nuanced Edition<br>CASSANDRA LOCAL_QUORUM SHOULD STAY LOCAL<br>Reflection Scala-2.10 and Spark weird errors when saving to Cassandra<br>Logging The Generated CQL from the Spark Cassandra Connector<br>Don’t use TextField for your unique key in Solr</p>
+
+      
+    </div>
+
+    <div>
+      
         
-            <a class="post-title-link" href="/2015/12/20/english-liulishuo-letter-for-daughter/" itemprop="url">
-              
-                <span itemprop="name">英语学习 - 给女儿的信</span>
-              
-            </a>
+      
+    </div>
+
+    <div>
+      
         
-      </h1>
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2015-12-20T00:22:58+08:00"
-              content="2015-12-20" >
-          12-20
-        </time>
-      </div>
+      
+    </div>
 
-    </header>
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Cassandra/" rel="tag">#Cassandra</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/07/12/redis-solution-Is-loading-the-dataset-in-memory/" rel="next" title="Error -->> -LOADING Redis is loading the dataset in memory">
+                <i class="fa fa-chevron-left"></i> Error -->> -LOADING Redis is loading the dataset in memory
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </article>
 
 
-    
-  </section>
 
-  
-
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
           
 
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
 
           
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/07/12/Cassandra-Query-Patterns-Not-using-the-in-query–for-multiple-partitions/"
+           data-title="Cassandra Query Patterns-Not using the “in” query for multiple partitions." data-url="http://kenshinn.net/2016/07/12/Cassandra-Query-Patterns-Not-using-the-in-query–for-multiple-partitions/">
+      </div>
+    
+  </div>
+
 
         </div>
         
@@ -316,8 +467,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.png"
@@ -418,6 +578,17 @@
       </section>
 
       
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-6"><a class="nav-link" href="#Related-Articles"><span class="nav-number">1.</span> <span class="nav-text">Related Articles:</span></a></li></ol></div>
+            
+          </div>
+        </section>
+      
 
     </div>
   </aside>
@@ -513,6 +684,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
 
   
 

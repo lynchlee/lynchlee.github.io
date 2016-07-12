@@ -273,6 +273,115 @@
             
               
                 
+                <a class="post-title-link" href="/2016/03/27/kafka-offset-monitor-setup/" itemprop="url">
+                  Kafka Offset Monitor Setup
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">發表於</span>
+            <time itemprop="dateCreated" datetime="2016-03-27T15:18:12+08:00" content="2016-03-27">
+              2016-03-27
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/03/27/kafka-offset-monitor-setup/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/27/kafka-offset-monitor-setup/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>How to fire up a kafka offset monitor instance:</p>
+<ol>
+<li>Download jar from github: <a href="https://github.com/quantifind/KafkaOffsetMonitor/releases" target="_blank" rel="external">https://github.com/quantifind/KafkaOffsetMonitor/releases</a></li>
+<li>Fire the java process at port 7088: <ul>
+<li>java -cp KafkaOffsetMonitor-assembly-0.2.1.jar com.quantifind.kafka.offsetapp.OffsetGetterWeb –zk ebs-ali-beijing-mig:2181 –port 7088 –refresh 10.seconds –retain 2.days &amp;</li>
+</ul>
+</li>
+<li>Open your browser and access : <a href="http://localhost:7088" target="_blank" rel="external">http://localhost:7088</a></li>
+</ol>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/01/06/java-thread-1/" itemprop="url">
                   Java多线程小记01 线程基础
                 </a>
@@ -1301,135 +1410,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2015/10/23/opentsdb-dev-maven-idea/" itemprop="url">
-                  Running OpenTSDB with Maven and Intellij Idea
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">發表於</span>
-            <time itemprop="dateCreated" datetime="2015-10-23T02:32:00+08:00" content="2015-10-23">
-              2015-10-23
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分類於</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/TSDB/" itemprop="url" rel="index">
-                    <span itemprop="name">TSDB</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2015/10/23/opentsdb-dev-maven-idea/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/10/23/opentsdb-dev-maven-idea/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h4 id="How-to-running-OpenTSDB-with-Maven-and-Intellij-Idea-for-devlopment"><a href="#How-to-running-OpenTSDB-with-Maven-and-Intellij-Idea-for-devlopment" class="headerlink" title="How to running OpenTSDB with Maven and Intellij Idea for devlopment"></a>How to running OpenTSDB with Maven and Intellij Idea for devlopment</h4><ol>
-<li><p>Clone source code from github, and walk into the root dir of source</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$git</span> <span class="built_in">clone</span> git@github.com:OpenTSDB/opentsdb.git</span><br><span class="line"><span class="variable">$cd</span> opentsdb</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>Now, the pwd is opentsdb, run : ./build.sh pom.xml  then you will get a project could build it with mavene. Ok, now you will find a file named pom.xml, it is cool.</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$./build.sh pom.xml</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/10/23/opentsdb-dev-maven-idea/#more" rel="contents">
-              閱讀全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1475,7 +1455,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">26</span>
+              <span class="site-state-item-count">27</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
