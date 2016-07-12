@@ -273,6 +273,123 @@
             
               
                 
+                <a class="post-title-link" href="/2016/01/06/java-thread-1/" itemprop="url">
+                  Java多线程小记01 线程基础
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">發表於</span>
+            <time itemprop="dateCreated" datetime="2016-01-06T01:18:35+08:00" content="2016-01-06">
+              2016-01-06
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/01/06/java-thread-1/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/01/06/java-thread-1/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>Java代码在编译后会变成Java字节码，字节码被类加载器加载到JVM中，jvm执行字节码，最终需要转换成汇编指令在CPU上执行。并发机制依赖于JVM的实现和CPU的指令。</p>
+<p>进程: 操作系统结构的基础，一次程序的执行，一个程序及其数据在处理机上执行时所发生的活动，是程序在数据集合上运行的过程，它是系统资源分配和调度的一个独立单位。</p>
+<p>线程: 线程中独立运行的子任务。使用多线程可以最大限度的利用CPU空闲时间来处理任务，提升系统运行的效率。</p>
+<p>Java中多线程的实现方式:</p>
+<ol>
+<li><p>继承Thread类, 重写run()方法, 线程类实例运行时调用start()方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestThread</span> <span class="keyword">extends</span> <span class="title">Thread</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>实现Runnable接口, 实现run方法, 线程类实例运行时把runnable实现类实例传入Thread实例并运行start()方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestThread</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>多个线程同时运行时线程间不贡献数据不会造成线程安全问题。<br>线程重点方法概要:<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1. currentThread()方法: 返回代码段正在被哪个线程调用的信息</span><br><span class="line">2. isAlive(): 判断当前线程是否处于活动状态</span><br><span class="line">3. sleep(): 在指定的毫秒数内让<span class="string">"当前正在执行的线程"</span>休眠(暂停执行)，这个<span class="string">"当前正在执行的线程"</span>就是this.currentThread()返回的线程</span><br><span class="line">4. getId(): 返回线程的唯一标识。</span><br></pre></td></tr></table></figure></p>
+<p>线程中断<br>   interrupt(),并不能立即中断线程,而是给线程打上一个中断标识位<br>   stop() 暴力停止线程<br>判断线程是否处于中断: this.interrupted() 判断当前线程是否已经中断,会清除状态; this.isInterrupted() 判断当前线程是否已经中断,不清除状态;</p>
+<p>暂停线程<br>  暂停一个线程表示改线程可以再恢复,java中使用suspend()暂停一个线程,使用resume()恢复一个线程. 上述两个方法的缺点: 会造成资源独占, 不同步.</p>
+<p>线程优先级<br>  java中CPU执行线程是根据线程的优先级来决定下一次选取要执行的线程的. 方法setPriority(int value), value可以是1-10整数,不在此范围内将抛出异常. 线程的优先级具有继承性, 也就是说比如A线程启动了B线程,那么B线程和A线程具有相同的优先级.</p>
+<p>守护线程<br>  Java有两种线程: 用户线程, 守护线程<br>  守护线程是一种特殊的线程,它具有守护和伴随的含义. 当系统不在有非守护线程线程时,守护线程没有存在的必要,自动销毁. GC就是一个典型的守护线程. 可以把一个显示设置为守护线程,方法 setDeamon(true);</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/01/01/tomorrow-today/" itemprop="url">
                   明年的今天
                 </a>
@@ -1313,129 +1430,6 @@
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2015/10/19/spring-aop-cache-manuple/" itemprop="url">
-                  利用SpringAOP手动实现一个缓存
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">發表於</span>
-            <time itemprop="dateCreated" datetime="2015-10-19T00:34:05+08:00" content="2015-10-19">
-              2015-10-19
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分類於</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Spring/" itemprop="url" rel="index">
-                    <span itemprop="name">Spring</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2015/10/19/spring-aop-cache-manuple/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/10/19/spring-aop-cache-manuple/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>利用SpringAOP手动实现一个缓存</p>
-<p>场景：物流系统库存管理模块 ： 用户登录、仓库增删改查spring JdbcTemplate实现数据层操作。<br>为了减少DB的IO次数,配置AOP切面,用Map手动实现一个缓存：在添加、修改、删除仓库时,清空缓存;查询仓库列表或者查询每个仓库信息时,加载数据到缓存.<br>实现如下</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2015/10/19/spring-aop-cache-manuple/#more" rel="contents">
-              閱讀全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1481,7 +1475,7 @@
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">25</span>
+              <span class="site-state-item-count">26</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
@@ -1498,7 +1492,7 @@
           
             <div class="site-state-item site-state-tags">
               
-                <span class="site-state-item-count">21</span>
+                <span class="site-state-item-count">22</span>
                 <span class="site-state-item-name">標籤</span>
               
             </div>

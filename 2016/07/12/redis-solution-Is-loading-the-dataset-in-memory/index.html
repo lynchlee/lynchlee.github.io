@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Redis," />
 
 
 
@@ -84,15 +84,25 @@
 
 
 
-<meta name="description" content="この世は、强ければ生き、弱ければし。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="剣の心 の Blog">
-<meta property="og:url" content="http://kenshinn.net/tags/随笔/index.html">
+<meta name="description" content="Redis单独部署，一主一从，启动后程序连接报错，查看redis server日志，同样有错
+➜  shells tail -f /data/apps/log/redis/redis-slave.log 
+7201:S 12 Jul 11:05:48.164 * Non blocking connect for SYNC fired the event.
+7201:S 12 Jul 11:05:4">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Error -->> -LOADING Redis is loading the dataset in memory">
+<meta property="og:url" content="http://kenshinn.net/2016/07/12/redis-solution-Is-loading-the-dataset-in-memory/index.html">
 <meta property="og:site_name" content="剣の心 の Blog">
-<meta property="og:description" content="この世は、强ければ生き、弱ければし。">
+<meta property="og:description" content="Redis单独部署，一主一从，启动后程序连接报错，查看redis server日志，同样有错
+➜  shells tail -f /data/apps/log/redis/redis-slave.log 
+7201:S 12 Jul 11:05:48.164 * Non blocking connect for SYNC fired the event.
+7201:S 12 Jul 11:05:4">
+<meta property="og:updated_time" content="2016-07-12T03:13:42.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="剣の心 の Blog">
-<meta name="twitter:description" content="この世は、强ければ生き、弱ければし。">
+<meta name="twitter:title" content="Error -->> -LOADING Redis is loading the dataset in memory">
+<meta name="twitter:description" content="Redis单独部署，一主一从，启动后程序连接报错，查看redis server日志，同样有错
+➜  shells tail -f /data/apps/log/redis/redis-slave.log 
+7201:S 12 Jul 11:05:48.164 * Non blocking connect for SYNC fired the event.
+7201:S 12 Jul 11:05:4">
 
 
 
@@ -110,7 +120,7 @@
   };
 </script>
 
-  <title> 標籤: 随笔 | 剣の心 の Blog </title>
+  <title> Error -->> -LOADING Redis is loading the dataset in memory | 剣の心 の Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-hk">
@@ -131,7 +141,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left  ">
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -249,53 +259,200 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-collapse">
-    <div class="collection-title">
-      <h2 >
-        随笔
-        <small>標籤</small>
-      </h2>
-    </div>
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
 
     
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Error -->> -LOADING Redis is loading the dataset in memory
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">發表於</span>
+            <time itemprop="dateCreated" datetime="2016-07-12T11:09:03+08:00" content="2016-07-12">
+              2016-07-12
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/12/redis-solution-Is-loading-the-dataset-in-memory/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/12/redis-solution-Is-loading-the-dataset-in-memory/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
       
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+      
+        <p>Redis单独部署，一主一从，启动后程序连接报错，查看redis server日志，同样有错</p>
+<pre><code>➜  shells tail -f /data/apps/log/redis/redis-slave.log 
+7201:S 12 Jul 11:05:48.164 * Non blocking connect for SYNC fired the event.
+7201:S 12 Jul 11:05:48.260 # Error reply to PING from master: &apos;-LOADING Redis is loading the dataset in memory&apos;
+7201:S 12 Jul 11:05:49.197 * Connecting to MASTER 127.0.0.1:16379
+7201:S 12 Jul 11:05:49.197 * MASTER &lt;-&gt; SLAVE sync started
+7201:S 12 Jul 11:05:49.198 * Non blocking connect for SYNC fired the event.
+7201:S 12 Jul 11:05:49.245 # Error reply to PING from master: &apos;-LOADING Redis is loading the dataset in memory&apos;
+7201:S 12 Jul 11:05:50.230 * Connecting to MASTER 127.0.0.1:16379
+7201:S 12 Jul 11:05:50.230 * MASTER &lt;-&gt; SLAVE sync started
+7201:S 12 Jul 11:05:50.231 * Non blocking connect for SYNC fired the event.
+7201:S 12 Jul 11:05:50.233 # Error reply to PING from master: &apos;-LOADING Redis is loading the dataset in memory&apos;
+7201:S 12 Jul 11:05:51.270 * Connecting to MASTER 127.0.0.1:16379
+7201:S 12 Jul 11:05:51.270 * MASTER &lt;-&gt; SLAVE sync started
+7201:S 12 Jul 11:05:51.271 * Non blocking connect for SYNC fired the event.
+7201:S 12 Jul 11:05:51.277 # Error reply to PING from master: &apos;-LOADING Redis is loading the dataset in memory&apos;
+^C
+➜  shells tail -f /data/apps/log/redis/redis-master.log
+7205:M 12 Jul 11:05:46.877 * DB saved on disk
+7205:M 12 Jul 11:05:46.878 * DB saved on disk
+7205:M 12 Jul 11:05:46.878 * DB saved on disk
+7205:M 12 Jul 11:05:46.882 * DB saved on disk
+7205:M 12 Jul 11:05:47.035 * DB saved on disk
+7205:M 12 Jul 11:05:47.036 * DB saved on disk
+7205:M 12 Jul 11:05:47.036 * DB saved on disk
+</code></pre><p>这是因为swap频繁导致，在master下执行下面的命令即可解决:</p>
+<pre><code>➜  shells redis-cli -p 16379
+    127.0.0.1:16379&gt; FLUSHDB
+    OK
+</code></pre><p>再次查看日志:</p>
+<pre><code>➜  shells tail -f /data/apps/log/redis/redis-master.log
+7205:M 12 Jul 11:07:19.693 * DB saved on disk
+7205:M 12 Jul 11:07:19.720 * DB loaded from append only file: 159.006 seconds
+7205:M 12 Jul 11:07:19.720 * The server is now ready to accept connections on port 16379
+7205:M 12 Jul 11:07:20.525 * Slave 127.0.0.1:16380 asks for synchronization
+7205:M 12 Jul 11:07:20.526 * Full resync requested by slave 127.0.0.1:16380
+7205:M 12 Jul 11:07:20.526 * Starting BGSAVE for SYNC with target: disk
+7205:M 12 Jul 11:07:20.529 * Background saving started by pid 7285
+7285:C 12 Jul 11:07:20.533 * DB saved on disk
+7205:M 12 Jul 11:07:20.624 * Background saving terminated with success
+7205:M 12 Jul 11:07:20.624 * Synchronization with slave 127.0.0.1:16380 succeeded
+^C
+➜  shells tail -f /data/apps/log/redis/redis-slave.log 
+7201:S 12 Jul 11:07:20.627 * MASTER &lt;-&gt; SLAVE sync: Loading DB in memory
+7201:S 12 Jul 11:07:20.630 * MASTER &lt;-&gt; SLAVE sync: Finished with success
+7201:S 12 Jul 11:07:20.631 * Background append only file rewriting started by pid 7286
+7201:S 12 Jul 11:07:20.657 * AOF rewrite child asks to stop sending diffs.
+7286:C 12 Jul 11:07:20.657 * Parent agreed to stop sending diffs. Finalizing AOF...
+7286:C 12 Jul 11:07:20.657 * Concatenating 0.00 MB of AOF diff received from parent.
+7286:C 12 Jul 11:07:20.657 * SYNC append only file rewrite performed
+7201:S 12 Jul 11:07:20.730 * Background AOF rewrite terminated with success
+7201:S 12 Jul 11:07:20.730 * Residual parent diff successfully flushed to the rewritten AOF (0.00 MB)
+7201:S 12 Jul 11:07:20.733 * Background AOF rewrite finished successfully
+</code></pre><p>正常，启动程序，redis连接也正常了。</p>
+<p>Cool !!</p>
 
-      <h1 class="post-title">
+      
+    </div>
+
+    <div>
+      
         
-            <a class="post-title-link" href="/2015/12/16/casual-1/" itemprop="url">
-              
-                <span itemprop="name">关于孤独</span>
-              
-            </a>
+      
+    </div>
+
+    <div>
+      
         
-      </h1>
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2015-12-16T00:39:28+08:00"
-              content="2015-12-16" >
-          12-16
-        </time>
-      </div>
+      
+    </div>
 
-    </header>
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Redis/" rel="tag">#Redis</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/07/09/CQL-DataType-for-Cassandra/" rel="next" title="CQL DataType for Cassandra">
+                <i class="fa fa-chevron-left"></i> CQL DataType for Cassandra
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </article>
 
 
-    
-  </div>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
           
 
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
 
           
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/07/12/redis-solution-Is-loading-the-dataset-in-memory/"
+           data-title="Error -->> -LOADING Redis is loading the dataset in memory" data-url="http://kenshinn.net/2016/07/12/redis-solution-Is-loading-the-dataset-in-memory/">
+      </div>
+    
+  </div>
+
 
         </div>
         
@@ -315,8 +472,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.png"
@@ -417,6 +583,17 @@
       </section>
 
       
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <p class="post-toc-empty">此文章未包含目錄</p>
+            
+          </div>
+        </section>
+      
 
     </div>
   </aside>
@@ -512,6 +689,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
 
   
 
