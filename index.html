@@ -273,6 +273,224 @@
             
               
                 
+                <a class="post-title-link" href="/2016/07/15/Understanding-How-CQL3-Maps-to-Cassandra’s-Internal-Data-Structure-Collections/" itemprop="url">
+                  How CQL3 Maps to Cassandra’s Internal Data Structure - Sets, Lists, and Maps
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">發表於</span>
+            <time itemprop="dateCreated" datetime="2016-07-15T01:11:27+08:00" content="2016-07-15">
+              2016-07-15
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/07/15/Understanding-How-CQL3-Maps-to-Cassandra’s-Internal-Data-Structure-Collections/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/15/Understanding-How-CQL3-Maps-to-Cassandra’s-Internal-Data-Structure-Collections/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>This is just a quick reference regarding how Cassandra sets, lists, and maps work under the hood:</p>
+<h5 id="Maps"><a href="#Maps" class="headerlink" title="Maps"></a>Maps</h5><p>Defining:</p>
+<pre><code>cqlsh:test&gt; CREATE TABLE phonelists (
+        ... user text PRIMARY KEY,
+        ... phoneNumbers map&lt;text,text&gt; );
+</code></pre><p>Inserting:</p>
+<pre><code>cqlsh:test&gt; INSERT INTO phonelists (user, phonenumbers)
+        ... VALUES (&apos;john&apos;,{&apos;patricia&apos;:&apos;555-4326&apos;,&apos;doug&apos;:&apos;555-1579&apos;});
+cqlsh:test&gt; INSERT INTO phonelists (user, phonenumbers)
+        ... VALUES (&apos;scott&apos;,{&apos;bill&apos;:&apos;555-7382&apos;,&apos;patricia&apos;:&apos;555-4326&apos;, &apos;jane&apos;:&apos;555-8743&apos;});
+</code></pre><p>Retrieving:</p>
+<pre><code>cqlsh:test&gt; SELECT * FROM phonelists;
+
+ user  | phonenumbers
+-------+------------------------------------------------------
+ scott | {bill: 555-7382, jane: 555-8743, patricia: 555-4326}
+  john |                 {doug: 555-1579, patricia: 555-4326}
+</code></pre><p>Updating:</p>
+<pre><code>cqlsh:test&gt; UPDATE phonelists
+        ... SET phonenumbers = phonenumbers + {&apos;daniel&apos;:&apos;555-0453&apos;}
+        ... WHERE user=&apos;john&apos;;
+The internal representation:
+
+[default@test] list phonelists;
+-------------------
+RowKey: scott
+=&gt; (column=, value=, timestamp=1374684062860000)
+=&gt; (column=phonenumbers:bill, value=&apos;555-7382&apos;, timestamp=1374684062860000)
+=&gt; (column=phonenumbers:jane, value=&apos;555-8743&apos;, timestamp=1374684062860000)
+=&gt; (column=phonenumbers:patricia, value=&apos;555-4326&apos;, timestamp=1374684062860000)
+-------------------
+RowKey: john
+=&gt; (column=, value=, timestamp=1374683971220000)
+=&gt; (column=phonenumbers:doug, value=&apos;555-1579&apos;, timestamp=1374683971220000)
+=&gt; (column=phonenumbers:patricia, value=&apos;555-4326&apos;, timestamp=1374683971220000)
+Note that the above text components, e.g. ‘doug’ and ‘555-1579′, are returned by cassandra-cli in their hex encoding. I’ve taken the liberty to decode them so that the print out is more understandable. I will do this throughout the post.
+</code></pre><h5 id="Lists"><a href="#Lists" class="headerlink" title="Lists"></a>Lists</h5><p>Defining:</p>
+<pre><code>cqlsh:test&gt; CREATE TABLE friendlists (
+        ... user text PRIMARY KEY,
+        ... friends list &lt;text&gt;
+        ... );
+</code></pre><p>Inserting:</p>
+<pre><code>cqlsh:test&gt; INSERT INTO friendlists (user, friends)
+        ... VALUES (&apos;john&apos;,[&apos;doug&apos;,&apos;patricia&apos;,&apos;scott&apos;]);
+cqlsh:test&gt; INSERT INTO friendlists (user, friends)
+        ... VALUES (&apos;patricia&apos;, [&apos;john&apos;,&apos;lucifer&apos;]);
+</code></pre><p>Retrieving:</p>
+<pre><code>cqlsh:test&gt; SELECT * FROM friendlists;
+
+ user     | friends
+----------+-------------------------
+     john | [doug, patricia, scott]
+ patricia |         [john, lucifer]
+</code></pre><p>Updating:</p>
+<pre><code>cqlsh:test&gt; UPDATE friendlists
+        ... SET friends = friends + [&apos;matt&apos;,&apos;eric&apos;]
+        ... WHERE user=&apos;john&apos;;
+cqlsh:test&gt; UPDATE friendlists
+        ... SET friends = friends - [&apos;lucifer&apos;]
+        ... WHERE user=&apos;patricia&apos;;
+</code></pre><p>The internal representation:</p>
+<pre><code>[default@test] list friendlists;
+Using default limit of 100
+Using default column limit of 100
+-------------------
+RowKey: john
+=&gt; (column=, value=, timestamp=1374687324950000)
+=&gt; (column=friends:26017c10f48711e2801fdf9895e5d0f8, value=&apos;doug&apos;, timestamp=1374687206993000)
+=&gt; (column=friends:26017c11f48711e2801fdf9895e5d0f8, value=&apos;patricia&apos;, timestamp=1374687206993000)
+=&gt; (column=friends:26017c12f48711e2801fdf9895e5d0f8, value=&apos;scott&apos;, timestamp=1374687206993000)
+=&gt; (column=friends:6c504b60f48711e2801fdf9895e5d0f8, value=&apos;matt&apos;, timestamp=1374687324950000)
+=&gt; (column=friends:6c504b61f48711e2801fdf9895e5d0f8, value=&apos;eric&apos;, timestamp=1374687324950000)
+-------------------
+RowKey: patricia
+=&gt; (column=, value=, timestamp=1374687352290000)
+=&gt; (column=friends:3b817b80f48711e2801fdf9895e5d0f8, value=&apos;john&apos;, timestamp=1374687243064000)
+</code></pre><p>Here the internal column name is more complicated because a UUID is appended to the name of the CQL field “friend”. This is used to keep track of the order of items in the list.</p>
+<p>To be determined: Does a list item delete take more time than a list insert? I suspect so – I don’t see how Cassandra can delete an element in the list without reading in all the elements in the list and then deleting column that has the value indicated in the delete. — UPDATE This is the case.</p>
+<h6 id="Set"><a href="#Set" class="headerlink" title="Set"></a>Set</h6><p>Defining:</p>
+<pre><code>cqlsh:test&gt; CREATE TABLE friendsets (
+        ... user text PRIMARY KEY,
+        ... friends set &lt;text&gt;
+        ... );
+</code></pre><p>Inserting:</p>
+<pre><code>cqlsh:test&gt; INSERT INTO friendsets (user, friends)
+        ... VALUES (&apos;john&apos;,{&apos;doug&apos;,&apos;patricia&apos;,&apos;scott&apos;});
+cqlsh:test&gt; INSERT INTO friendsets (user, friends)
+        ... VALUES (&apos;patricia&apos;, {&apos;john&apos;,&apos;lucifer&apos;});
+</code></pre><p>Retrieving:</p>
+<pre><code>cqlsh:test&gt; SELECT * FROM friendsets;
+
+ user     | friends
+----------+-------------------------
+     john | {doug, patricia, scott}
+ patricia |         {john, lucifer}
+</code></pre><p>Updating:</p>
+<pre><code>cqlsh:test&gt; UPDATE friendsets
+        ... SET friends = friends + {&apos;matt&apos;,&apos;eric&apos;}
+        ... WHERE user=&apos;john&apos;;
+cqlsh:test&gt; UPDATE friendsets
+        ... SET friends = friends - {&apos;lucifer&apos;}
+        ... WHERE user=&apos;patricia&apos;;
+</code></pre><p>The internal representation:</p>
+<pre><code>[default@test] list friendsets;
+Using default limit of 100
+Using default column limit of 100
+-------------------
+RowKey: john
+=&gt; (column=, value=, timestamp=1374688135443000)
+=&gt; (column=friends:&apos;doug&apos;, value=, timestamp=1374688108307000)
+=&gt; (column=friends:&apos;eric&apos;, value=, timestamp=1374688135443000)
+=&gt; (column=friends:&apos;matt&apos;, value=, timestamp=1374688135443000)
+=&gt; (column=friends:&apos;patricia&apos;, value=, timestamp=1374688108307000)
+=&gt; (column=friends:&apos;scott&apos;, value=, timestamp=1374688108307000)
+-------------------
+RowKey: patricia
+=&gt; (column=, value=, timestamp=1374688151386000)
+=&gt; (column=friends:&apos;john&apos;, value=, timestamp=1374688116595000)
+</code></pre>
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/07/12/Cassandra-Query-Patterns-Not-using-the-in-query–for-multiple-partitions/" itemprop="url">
                   Cassandra Query Patterns-Not using the “in” query for multiple partitions.
                 </a>
@@ -1570,107 +1788,6 @@ location / {
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/05/24/kongfu-of-yangguo/" itemprop="url">
-                  金轮法王对早期杨过的武功评论
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">發表於</span>
-            <time itemprop="dateCreated" datetime="2016-05-24T09:04:33+08:00" content="2016-05-24">
-              2016-05-24
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/05/24/kongfu-of-yangguo/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/05/24/kongfu-of-yangguo/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>你懂得武功花样是不少，只可惜 杂而不纯,博而不精，我想问问你，在你懂的武功里哪一种你觉得最精湛呢?!<br>   —- 金轮法王</p>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1716,7 +1833,7 @@ location / {
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">27</span>
+              <span class="site-state-item-count">28</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>

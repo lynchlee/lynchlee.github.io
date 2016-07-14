@@ -84,18 +84,28 @@
 
 
 
-<meta name="description" content="According to Brewer’s CAP theorem, it is impossible for any distributed computer system to simultaneously provide all three of Consistency, Availability and Partition Tolerance. You can’t have the thr">
+<meta name="description" content="This is just a quick reference regarding how Cassandra sets, lists, and maps work under the hood:
+MapsDefining:
+cqlsh:test&amp;gt; CREATE TABLE phonelists (
+        ... user text PRIMARY KEY,
+        ...">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Consistency Tuning In Cassandra">
-<meta property="og:url" content="http://kenshinn.net/2016/07/09/Consistency-Tuning-In-Cassandra/index.html">
+<meta property="og:title" content="How CQL3 Maps to Cassandra’s Internal Data Structure - Sets, Lists, and Maps">
+<meta property="og:url" content="http://kenshinn.net/2016/07/15/Understanding-How-CQL3-Maps-to-Cassandra’s-Internal-Data-Structure-Collections/index.html">
 <meta property="og:site_name" content="剣の心 の Blog">
-<meta property="og:description" content="According to Brewer’s CAP theorem, it is impossible for any distributed computer system to simultaneously provide all three of Consistency, Availability and Partition Tolerance. You can’t have the thr">
-<meta property="og:image" content="http://kenshinn.net/img/cap.jpg">
-<meta property="og:updated_time" content="2016-07-09T10:02:47.000Z">
+<meta property="og:description" content="This is just a quick reference regarding how Cassandra sets, lists, and maps work under the hood:
+MapsDefining:
+cqlsh:test&amp;gt; CREATE TABLE phonelists (
+        ... user text PRIMARY KEY,
+        ...">
+<meta property="og:updated_time" content="2016-07-14T17:32:14.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Consistency Tuning In Cassandra">
-<meta name="twitter:description" content="According to Brewer’s CAP theorem, it is impossible for any distributed computer system to simultaneously provide all three of Consistency, Availability and Partition Tolerance. You can’t have the thr">
-<meta name="twitter:image" content="http://kenshinn.net/img/cap.jpg">
+<meta name="twitter:title" content="How CQL3 Maps to Cassandra’s Internal Data Structure - Sets, Lists, and Maps">
+<meta name="twitter:description" content="This is just a quick reference regarding how Cassandra sets, lists, and maps work under the hood:
+MapsDefining:
+cqlsh:test&amp;gt; CREATE TABLE phonelists (
+        ... user text PRIMARY KEY,
+        ...">
 
 
 
@@ -113,7 +123,7 @@
   };
 </script>
 
-  <title> Consistency Tuning In Cassandra | 剣の心 の Blog </title>
+  <title> How CQL3 Maps to Cassandra’s Internal Data Structure - Sets, Lists, and Maps | 剣の心 の Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-hk">
@@ -273,7 +283,7 @@
             
             
               
-                Consistency Tuning In Cassandra
+                How CQL3 Maps to Cassandra’s Internal Data Structure - Sets, Lists, and Maps
               
             
           </h1>
@@ -285,8 +295,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">發表於</span>
-            <time itemprop="dateCreated" datetime="2016-07-09T17:53:01+08:00" content="2016-07-09">
-              2016-07-09
+            <time itemprop="dateCreated" datetime="2016-07-15T01:11:27+08:00" content="2016-07-15">
+              2016-07-15
             </time>
           </span>
 
@@ -296,8 +306,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/09/Consistency-Tuning-In-Cassandra/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/09/Consistency-Tuning-In-Cassandra/" itemprop="commentsCount"></span>
+                <a href="/2016/07/15/Understanding-How-CQL3-Maps-to-Cassandra’s-Internal-Data-Structure-Collections/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/15/Understanding-How-CQL3-Maps-to-Cassandra’s-Internal-Data-Structure-Collections/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -320,40 +330,125 @@
       
 
       
-        <p>According to Brewer’s CAP theorem, it is impossible for any distributed computer system to simultaneously provide all three of Consistency, Availability and Partition Tolerance. You can’t have the three at the same time and get an acceptable latency.</p>
-<p> <img src="img/cap.jpg" alt=""></p>
-<p>Cassandra values Availability and Partitioning tolerance (AP). Trade-offs between consistency and latency are tunable in Cassandra. You can get strong consistency with Cassandra (with an increased latency).</p>
-<p>Cassandra extends the concept of eventual consistency. Eventual consistency implies the storage system guarantees that if no new updates are made to the object, eventually all accesses will return the last updated value.</p>
-<p>How does C* know which record in the cluster is the latest one?</p>
-<a id="more"></a>
-<p>Each Column Family is composed of rows of row metadata and columns. A Column is the smallest increment of data in Cassandra. It is a tuple containing a name, a value and a timestamp. Cassandra uses the column timestamp to determine the most recent update to a column. The timestamp is provided by the client application. The latest timestamp always wins when requesting data, so if multiple client sessions update the same columns in a row concurrently, the most recent update is the one that will eventually persist.</p>
-<p>C* provides tunable consistency by allowing to set the replication factor, replica placement strategy and consistency level.</p>
-<p>Replication factor</p>
-<p>Replication factor is total number of replicas across the cluster. So, a replication factor of 2 implies that there are two copies of each row and each copy is on a different node. All replicas are equally important; there is no primary or master replica.</p>
-<p>As a general rule, the replication factor should not exceed the number of nodes in the cluster. However, you can increase the replication factor and then add the desired number of nodes afterwards.</p>
-<p>When replication factor exceeds the number of nodes, writes are rejected, but reads are served as long as the desired consistency level can be met.</p>
-<p>Consistency level</p>
-<p>Consistency level is used to decide the number and location of nodes to which a write must be written to the commit log and memory table of. In case of read, Consistency level is used to decide the number and location of nodes whose responses must be compared for fetching the most recent record.</p>
-<p>The Consistency Levels in C* are ONE, TWO, THREE, QUORUM, LOCAL_QUORUM, EACH_QUORUM, ALL, ANY.</p>
-<pre><code>ONE, TWO and THREE imply the number each represents.
+        <p>This is just a quick reference regarding how Cassandra sets, lists, and maps work under the hood:</p>
+<h5 id="Maps"><a href="#Maps" class="headerlink" title="Maps"></a>Maps</h5><p>Defining:</p>
+<pre><code>cqlsh:test&gt; CREATE TABLE phonelists (
+        ... user text PRIMARY KEY,
+        ... phoneNumbers map&lt;text,text&gt; );
+</code></pre><p>Inserting:</p>
+<pre><code>cqlsh:test&gt; INSERT INTO phonelists (user, phonenumbers)
+        ... VALUES (&apos;john&apos;,{&apos;patricia&apos;:&apos;555-4326&apos;,&apos;doug&apos;:&apos;555-1579&apos;});
+cqlsh:test&gt; INSERT INTO phonelists (user, phonenumbers)
+        ... VALUES (&apos;scott&apos;,{&apos;bill&apos;:&apos;555-7382&apos;,&apos;patricia&apos;:&apos;555-4326&apos;, &apos;jane&apos;:&apos;555-8743&apos;});
+</code></pre><p>Retrieving:</p>
+<pre><code>cqlsh:test&gt; SELECT * FROM phonelists;
 
-QUORUM =&gt;  a quorum of replica nodes
+ user  | phonenumbers
+-------+------------------------------------------------------
+ scott | {bill: 555-7382, jane: 555-8743, patricia: 555-4326}
+  john |                 {doug: 555-1579, patricia: 555-4326}
+</code></pre><p>Updating:</p>
+<pre><code>cqlsh:test&gt; UPDATE phonelists
+        ... SET phonenumbers = phonenumbers + {&apos;daniel&apos;:&apos;555-0453&apos;}
+        ... WHERE user=&apos;john&apos;;
+The internal representation:
 
-LOCAL_QUORUM =&gt; a quorum of replica nodes in the same data center as the coordinator node.
+[default@test] list phonelists;
+-------------------
+RowKey: scott
+=&gt; (column=, value=, timestamp=1374684062860000)
+=&gt; (column=phonenumbers:bill, value=&apos;555-7382&apos;, timestamp=1374684062860000)
+=&gt; (column=phonenumbers:jane, value=&apos;555-8743&apos;, timestamp=1374684062860000)
+=&gt; (column=phonenumbers:patricia, value=&apos;555-4326&apos;, timestamp=1374684062860000)
+-------------------
+RowKey: john
+=&gt; (column=, value=, timestamp=1374683971220000)
+=&gt; (column=phonenumbers:doug, value=&apos;555-1579&apos;, timestamp=1374683971220000)
+=&gt; (column=phonenumbers:patricia, value=&apos;555-4326&apos;, timestamp=1374683971220000)
+Note that the above text components, e.g. ‘doug’ and ‘555-1579′, are returned by cassandra-cli in their hex encoding. I’ve taken the liberty to decode them so that the print out is more understandable. I will do this throughout the post.
+</code></pre><h5 id="Lists"><a href="#Lists" class="headerlink" title="Lists"></a>Lists</h5><p>Defining:</p>
+<pre><code>cqlsh:test&gt; CREATE TABLE friendlists (
+        ... user text PRIMARY KEY,
+        ... friends list &lt;text&gt;
+        ... );
+</code></pre><p>Inserting:</p>
+<pre><code>cqlsh:test&gt; INSERT INTO friendlists (user, friends)
+        ... VALUES (&apos;john&apos;,[&apos;doug&apos;,&apos;patricia&apos;,&apos;scott&apos;]);
+cqlsh:test&gt; INSERT INTO friendlists (user, friends)
+        ... VALUES (&apos;patricia&apos;, [&apos;john&apos;,&apos;lucifer&apos;]);
+</code></pre><p>Retrieving:</p>
+<pre><code>cqlsh:test&gt; SELECT * FROM friendlists;
 
-EACH_QUORUM =&gt; a quorum of replica nodes in all data centers.
+ user     | friends
+----------+-------------------------
+     john | [doug, patricia, scott]
+ patricia |         [john, lucifer]
+</code></pre><p>Updating:</p>
+<pre><code>cqlsh:test&gt; UPDATE friendlists
+        ... SET friends = friends + [&apos;matt&apos;,&apos;eric&apos;]
+        ... WHERE user=&apos;john&apos;;
+cqlsh:test&gt; UPDATE friendlists
+        ... SET friends = friends - [&apos;lucifer&apos;]
+        ... WHERE user=&apos;patricia&apos;;
+</code></pre><p>The internal representation:</p>
+<pre><code>[default@test] list friendlists;
+Using default limit of 100
+Using default column limit of 100
+-------------------
+RowKey: john
+=&gt; (column=, value=, timestamp=1374687324950000)
+=&gt; (column=friends:26017c10f48711e2801fdf9895e5d0f8, value=&apos;doug&apos;, timestamp=1374687206993000)
+=&gt; (column=friends:26017c11f48711e2801fdf9895e5d0f8, value=&apos;patricia&apos;, timestamp=1374687206993000)
+=&gt; (column=friends:26017c12f48711e2801fdf9895e5d0f8, value=&apos;scott&apos;, timestamp=1374687206993000)
+=&gt; (column=friends:6c504b60f48711e2801fdf9895e5d0f8, value=&apos;matt&apos;, timestamp=1374687324950000)
+=&gt; (column=friends:6c504b61f48711e2801fdf9895e5d0f8, value=&apos;eric&apos;, timestamp=1374687324950000)
+-------------------
+RowKey: patricia
+=&gt; (column=, value=, timestamp=1374687352290000)
+=&gt; (column=friends:3b817b80f48711e2801fdf9895e5d0f8, value=&apos;john&apos;, timestamp=1374687243064000)
+</code></pre><p>Here the internal column name is more complicated because a UUID is appended to the name of the CQL field “friend”. This is used to keep track of the order of items in the list.</p>
+<p>To be determined: Does a list item delete take more time than a list insert? I suspect so – I don’t see how Cassandra can delete an element in the list without reading in all the elements in the list and then deleting column that has the value indicated in the delete. — UPDATE This is the case.</p>
+<h6 id="Set"><a href="#Set" class="headerlink" title="Set"></a>Set</h6><p>Defining:</p>
+<pre><code>cqlsh:test&gt; CREATE TABLE friendsets (
+        ... user text PRIMARY KEY,
+        ... friends set &lt;text&gt;
+        ... );
+</code></pre><p>Inserting:</p>
+<pre><code>cqlsh:test&gt; INSERT INTO friendsets (user, friends)
+        ... VALUES (&apos;john&apos;,{&apos;doug&apos;,&apos;patricia&apos;,&apos;scott&apos;});
+cqlsh:test&gt; INSERT INTO friendsets (user, friends)
+        ... VALUES (&apos;patricia&apos;, {&apos;john&apos;,&apos;lucifer&apos;});
+</code></pre><p>Retrieving:</p>
+<pre><code>cqlsh:test&gt; SELECT * FROM friendsets;
 
-ALL =&gt; all replica nodes in the cluster
-
-ANY =&gt; at least one nodes in the cluster
-</code></pre><p>The size of the quorum is calculated as (replication_factor / 2) + 1</p>
-<p>Selecting a Consistency Level</p>
-<p>Consistency level “ANY” should only be used where the absolute requirement is that a write never fails. This consistency level has the highest probability of a read not returning the latest written values.</p>
-<p>For write operations, ANY is the lowest consistency (but highest availability), and ALL is the highest consistency (but lowest availability).</p>
-<p>For read operations, ONE is the lowest consistency (but highest availability), and ALL is the highest consistency (but lowest availability).</p>
-<p>QUORUM is a good middle-ground ensuring strong consistency, yet still tolerating some level of failure.</p>
-<p>In multi data center clusters,  contacting multiple data centers for a read or write request can slow down the response. The consistency level LOCAL_QUORUM is specifically designed for doing quorum reads and writes in multi data center clusters.</p>
-
+ user     | friends
+----------+-------------------------
+     john | {doug, patricia, scott}
+ patricia |         {john, lucifer}
+</code></pre><p>Updating:</p>
+<pre><code>cqlsh:test&gt; UPDATE friendsets
+        ... SET friends = friends + {&apos;matt&apos;,&apos;eric&apos;}
+        ... WHERE user=&apos;john&apos;;
+cqlsh:test&gt; UPDATE friendsets
+        ... SET friends = friends - {&apos;lucifer&apos;}
+        ... WHERE user=&apos;patricia&apos;;
+</code></pre><p>The internal representation:</p>
+<pre><code>[default@test] list friendsets;
+Using default limit of 100
+Using default column limit of 100
+-------------------
+RowKey: john
+=&gt; (column=, value=, timestamp=1374688135443000)
+=&gt; (column=friends:&apos;doug&apos;, value=, timestamp=1374688108307000)
+=&gt; (column=friends:&apos;eric&apos;, value=, timestamp=1374688135443000)
+=&gt; (column=friends:&apos;matt&apos;, value=, timestamp=1374688135443000)
+=&gt; (column=friends:&apos;patricia&apos;, value=, timestamp=1374688108307000)
+=&gt; (column=friends:&apos;scott&apos;, value=, timestamp=1374688108307000)
+-------------------
+RowKey: patricia
+=&gt; (column=, value=, timestamp=1374688151386000)
+=&gt; (column=friends:&apos;john&apos;, value=, timestamp=1374688116595000)
+</code></pre>
       
     </div>
 
@@ -383,17 +478,13 @@ ANY =&gt; at least one nodes in the cluster
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/07/08/cassandra-query-using-composite-keys/" rel="next" title="Query using composite keys, other than Row Key in Cassandra">
-                <i class="fa fa-chevron-left"></i> Query using composite keys, other than Row Key in Cassandra
+              <a href="/2016/07/12/Cassandra-Query-Patterns-Not-using-the-in-query–for-multiple-partitions/" rel="next" title="Cassandra Query Patterns-Not using the “in” query for multiple partitions.">
+                <i class="fa fa-chevron-left"></i> Cassandra Query Patterns-Not using the “in” query for multiple partitions.
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/07/09/An-introduction-to-Cassandra/" rel="prev" title="An introduction to Cassandra">
-                An introduction to Cassandra <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -422,8 +513,8 @@ ANY =&gt; at least one nodes in the cluster
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/07/09/Consistency-Tuning-In-Cassandra/"
-           data-title="Consistency Tuning In Cassandra" data-url="http://kenshinn.net/2016/07/09/Consistency-Tuning-In-Cassandra/">
+      <div class="ds-thread" data-thread-key="2016/07/15/Understanding-How-CQL3-Maps-to-Cassandra’s-Internal-Data-Structure-Collections/"
+           data-title="How CQL3 Maps to Cassandra’s Internal Data Structure - Sets, Lists, and Maps" data-url="http://kenshinn.net/2016/07/15/Understanding-How-CQL3-Maps-to-Cassandra’s-Internal-Data-Structure-Collections/">
       </div>
     
   </div>
@@ -564,7 +655,7 @@ ANY =&gt; at least one nodes in the cluster
               
             
             
-              <p class="post-toc-empty">此文章未包含目錄</p>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#Maps"><span class="nav-number">1.</span> <span class="nav-text">Maps</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Lists"><span class="nav-number">2.</span> <span class="nav-text">Lists</span></a><ol class="nav-child"><li class="nav-item nav-level-6"><a class="nav-link" href="#Set"><span class="nav-number">2.1.</span> <span class="nav-text">Set</span></a></li></ol></li></ol></div>
             
           </div>
         </section>
