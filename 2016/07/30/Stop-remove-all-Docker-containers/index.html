@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="TSDB,Metrics," />
+  <meta name="keywords" content="Docker," />
 
 
 
@@ -84,36 +84,22 @@
 
 
 
-<meta name="description" content="Env:123OS: Ubuntu 14.10IDE: Intellij 14.0.3OpenTSDB: 2.0.1
-
-Clone opentsdb from github $git clone git@github.com:OpenTSDB/opentsdb.git
-
-build $cd opentsdb &amp;amp;&amp;amp; ./build.sh
-
-create dev folder $mkd">
+<meta name="description" content="One liner to stop / remove all of Docker containers:
+docker stop $(docker ps -a -q)
+docker rm $(docker ps -a -q)">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Import OpenTSDB source into Intellij">
-<meta property="og:url" content="http://kenshinn.net/2015/08/22/Import-OpenTSDB-source-into-Intellij/index.html">
+<meta property="og:title" content="Stop / remove all Docker containers">
+<meta property="og:url" content="http://kenshinn.net/2016/07/30/Stop-remove-all-Docker-containers/index.html">
 <meta property="og:site_name" content="剣の心 の Blog">
-<meta property="og:description" content="Env:123OS: Ubuntu 14.10IDE: Intellij 14.0.3OpenTSDB: 2.0.1
-
-Clone opentsdb from github $git clone git@github.com:OpenTSDB/opentsdb.git
-
-build $cd opentsdb &amp;amp;&amp;amp; ./build.sh
-
-create dev folder $mkd">
-<meta property="og:image" content="http://kenshinn.net/img/opentsdb-ide-show.png">
-<meta property="og:updated_time" content="2016-05-22T08:57:57.000Z">
+<meta property="og:description" content="One liner to stop / remove all of Docker containers:
+docker stop $(docker ps -a -q)
+docker rm $(docker ps -a -q)">
+<meta property="og:updated_time" content="2016-07-30T07:56:06.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Import OpenTSDB source into Intellij">
-<meta name="twitter:description" content="Env:123OS: Ubuntu 14.10IDE: Intellij 14.0.3OpenTSDB: 2.0.1
-
-Clone opentsdb from github $git clone git@github.com:OpenTSDB/opentsdb.git
-
-build $cd opentsdb &amp;amp;&amp;amp; ./build.sh
-
-create dev folder $mkd">
-<meta name="twitter:image" content="http://kenshinn.net/img/opentsdb-ide-show.png">
+<meta name="twitter:title" content="Stop / remove all Docker containers">
+<meta name="twitter:description" content="One liner to stop / remove all of Docker containers:
+docker stop $(docker ps -a -q)
+docker rm $(docker ps -a -q)">
 
 
 
@@ -131,7 +117,7 @@ create dev folder $mkd">
   };
 </script>
 
-  <title> Import OpenTSDB source into Intellij | 剣の心 の Blog </title>
+  <title> Stop / remove all Docker containers | 剣の心 の Blog </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-hk">
@@ -291,7 +277,7 @@ create dev folder $mkd">
             
             
               
-                Import OpenTSDB source into Intellij
+                Stop / remove all Docker containers
               
             
           </h1>
@@ -303,38 +289,19 @@ create dev folder $mkd">
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">發表於</span>
-            <time itemprop="dateCreated" datetime="2015-08-22T20:14:50+08:00" content="2015-08-22">
-              2015-08-22
+            <time itemprop="dateCreated" datetime="2016-07-30T15:55:01+08:00" content="2016-07-30">
+              2016-07-30
             </time>
           </span>
 
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分類於</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/TSDB/" itemprop="url" rel="index">
-                    <span itemprop="name">TSDB</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
           
 
           
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2015/08/22/Import-OpenTSDB-source-into-Intellij/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2015/08/22/Import-OpenTSDB-source-into-Intellij/" itemprop="commentsCount"></span>
+                <a href="/2016/07/30/Stop-remove-all-Docker-containers/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/30/Stop-remove-all-Docker-containers/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -357,37 +324,10 @@ create dev folder $mkd">
       
 
       
-        <h4 id="Env"><a href="#Env" class="headerlink" title="Env:"></a>Env:</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">OS: Ubuntu 14.10</span><br><span class="line">IDE: Intellij 14.0.3</span><br><span class="line">OpenTSDB: 2.0.1</span><br></pre></td></tr></table></figure>
-<ol>
-<li><p>Clone opentsdb from github <code>$git clone git@github.com:OpenTSDB/opentsdb.git</code></p>
-</li>
-<li><p>build <code>$cd opentsdb &amp;&amp; ./build.sh</code></p>
-</li>
-<li><p>create dev folder <code>$mkdir opentsdb-dev</code></p>
-</li>
-<li><p>now you have two dirs name opentsdb and opentsdb-dev</p>
-</li>
-<li><p><code>$cd opentsdb-dev &amp;&amp; ln -s /work/opentsdb/build/third_party libs</code></p>
-<a id="more"></a>
-</li>
-<li><p><code>$mkdir -p src/main/java/net &amp;&amp; cd src/main/java/net</code></p>
-</li>
-<li><p><code>$ln -s /work/opentsdb/src opentsdb</code></p>
-</li>
-<li><p><code>$mkdir -p src/main/java/tsd &amp;&amp; ce src/main/java/tsd</code></p>
-</li>
-<li><p><code>$ln -s /work/opentsdb/src/tsd/client client</code></p>
-</li>
-<li><p><code>$mkdir -p src/test/java/net &amp;&amp; cd src/test/java/net</code></p>
-</li>
-<li><p><code>$ln -s /work/opentsdb/test opentsdb</code></p>
-</li>
-<li><p>Fire up your Intellij , import the source into , and then enjoy !!</p>
-</li>
-</ol>
-<p>OK, done !!</p>
-<p><img src="/img/opentsdb-ide-show.png" alt=""></p>
-
+        <p>One liner to stop / remove all of Docker containers:</p>
+<pre><code>docker stop $(docker ps -a -q)
+docker rm $(docker ps -a -q)
+</code></pre>
       
     </div>
 
@@ -408,9 +348,7 @@ create dev folder $mkd">
       
         <div class="post-tags">
           
-            <a href="/tags/TSDB/" rel="tag">#TSDB</a>
-          
-            <a href="/tags/Metrics/" rel="tag">#Metrics</a>
+            <a href="/tags/Docker/" rel="tag">#Docker</a>
           
         </div>
       
@@ -419,17 +357,13 @@ create dev folder $mkd">
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2015/08/22/HBase-single-node-setup/" rel="next" title="HBase single node setup">
-                <i class="fa fa-chevron-left"></i> HBase single node setup
+              <a href="/2016/07/28/Every-Programmer-Should-Know-These-Latency-Numbers/" rel="next" title="Every Programmer Should Know These Latency Numbers">
+                <i class="fa fa-chevron-left"></i> Every Programmer Should Know These Latency Numbers
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2015/09/07/Set-Env-for-Clojure-with-IntelliJ-and-Leiningen/" rel="prev" title="Set env for Clojure with IntelliJ and Leiningen">
-                Set env for Clojure with IntelliJ and Leiningen <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -458,8 +392,8 @@ create dev folder $mkd">
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2015/08/22/Import-OpenTSDB-source-into-Intellij/"
-           data-title="Import OpenTSDB source into Intellij" data-url="http://kenshinn.net/2015/08/22/Import-OpenTSDB-source-into-Intellij/">
+      <div class="ds-thread" data-thread-key="2016/07/30/Stop-remove-all-Docker-containers/"
+           data-title="Stop / remove all Docker containers" data-url="http://kenshinn.net/2016/07/30/Stop-remove-all-Docker-containers/">
       </div>
     
   </div>
@@ -600,7 +534,7 @@ create dev folder $mkd">
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Env"><span class="nav-number">1.</span> <span class="nav-text">Env:</span></a></li></ol></div>
+              <p class="post-toc-empty">此文章未包含目錄</p>
             
           </div>
         </section>
