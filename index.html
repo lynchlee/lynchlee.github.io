@@ -273,6 +273,110 @@
             
               
                 
+                <a class="post-title-link" href="/2016/08/05/spring-boot-view/" itemprop="url">
+                  Spring boot view
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">發表於</span>
+            <time itemprop="dateCreated" datetime="2016-08-05T01:50:50+08:00" content="2016-08-05">
+              2016-08-05
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/08/05/spring-boot-view/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/05/spring-boot-view/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <blockquote>
+<p>Just mark</p>
+</blockquote>
+<p>表 1. Spring Boot 推荐的基础 POM 文件<br>名称                                说明<br>spring-boot-starter    核心 POM，包含自动配置支持、日志库和对 YAML 配置文件的支持。<br>spring-boot-starter-amqp    通过 spring-rabbit 支持 AMQP。<br>spring-boot-starter-aop    包含 spring-aop 和 AspectJ 来支持面向切面编程（AOP）。<br>spring-boot-starter-batch    支持 Spring Batch，包含 HSQLDB。<br>spring-boot-starter-data-jpa    包含 spring-data-jpa、spring-orm 和 Hibernate 来支持 JPA。<br>spring-boot-starter-data-mongodb    包含 spring-data-mongodb 来支持 MongoDB。<br>spring-boot-starter-data-rest    通过 spring-data-rest-webmvc 支持以 REST 方式暴露 Spring Data 仓库。<br>spring-boot-starter-jdbc    支持使用 JDBC 访问数据库。<br>spring-boot-starter-security    包含 spring-security。<br>spring-boot-starter-test    包含常用的测试所需的依赖，如 JUnit、Hamcrest、Mockito 和 spring-test 等。<br>spring-boot-starter-velocity    支持使用 Velocity 作为模板引擎。<br>spring-boot-starter-web    支持 Web 应用开发，包含 Tomcat 和 spring-mvc。<br>spring-boot-starter-websocket    支持使用 Tomcat 开发 WebSocket 应用。<br>spring-boot-starter-ws    支持 Spring Web Services。<br>spring-boot-starter-actuator    添加适用于生产环境的功能，如性能指标和监测等功能。<br>spring-boot-starter-remote-shell    添加远程 SSH 支持。<br>spring-boot-starter-jetty    使用 Jetty 而不是默认的 Tomcat 作为应用服务器。<br>spring-boot-starter-log4j    添加 Log4j 的支持。<br>spring-boot-starter-logging    使用 Spring Boot 默认的日志框架 Logback。<br>spring-boot-starter-tomcat    使用 Spring Boot 默认的 Tomcat 作为应用服务器。</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/07/30/Stop-remove-all-Docker-containers/" itemprop="url">
                   Stop / remove all Docker containers
                 </a>
@@ -1689,125 +1793,11 @@ RowKey: mevivs
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/08/cassandra-query-using-composite-keys/" itemprop="url">
-                  Query using composite keys, other than Row Key in Cassandra
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">發表於</span>
-            <time itemprop="dateCreated" datetime="2016-07-08T16:44:09+08:00" content="2016-07-08">
-              2016-07-08
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/08/cassandra-query-using-composite-keys/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/08/cassandra-query-using-composite-keys/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <p>I want to query data filtering by composite keys other than Row Key in CQL3. These are my queries:</p>
-<pre><code>CREATE TABLE grades (id int,
-  date timestamp,
-  subject text,
-  status text,
-  PRIMARY KEY (id, subject, status, date)
-);
-</code></pre><p>When I try and access the data,</p>
-<pre><code>SELECT * FROM grades where id = 1098; //works fine
-SELECT * FROM grades where subject = &apos;English&apos; ALLOW FILTERING; //works fine
-SELECT * FROM grades where status = &apos;Active&apos; ALLOW FILTERING; //gives an error
-</code></pre><p>Bad Request: PRIMARY KEY part status cannot be restricted (preceding part subject is either not restricted or by a non-EQ relation)<br>Just to experiment, I shuffled the keys around keeping ‘id’ as my Primary Row Key always. I am always ONLY able to query using either the Primary Row key or the second key, considering above example, if I swap subjects and status in Primary Key list, I can then query with status but I get similar error if I try to do by subject or by time.<br>Am I doing something wrong? Can I not query data using any other composite key in CQL3? I’m using Cassandra 1.2.6 and CQL3.</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/07/08/cassandra-query-using-composite-keys/#more" rel="contents">
-              閱讀全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
   </nav>
 
 
@@ -1848,7 +1838,7 @@ SELECT * FROM grades where status = &apos;Active&apos; ALLOW FILTERING; //gives 
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">30</span>
+              <span class="site-state-item-count">31</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
@@ -1865,7 +1855,7 @@ SELECT * FROM grades where status = &apos;Active&apos; ALLOW FILTERING; //gives 
           
             <div class="site-state-item site-state-tags">
               
-                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-count">25</span>
                 <span class="site-state-item-name">標籤</span>
               
             </div>
