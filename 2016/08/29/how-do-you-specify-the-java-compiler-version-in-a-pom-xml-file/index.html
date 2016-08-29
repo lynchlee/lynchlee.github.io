@@ -85,42 +85,36 @@
 
 
 <meta name="description" content="There are two methods setting the -source and -target of the Java Compiler:
-
-using maven plugin, you can then put:
-
+1 . using maven plugin, you can then put:
 &amp;lt;project&amp;gt;
-    ...
-    &amp;lt;build&amp;gt;
+  ...
+  &amp;lt;build&amp;gt;
     ...
     &amp;lt;plugins&amp;gt;
-       &amp;lt;plu">
+      &amp;lt;plugin">
 <meta property="og:type" content="article">
 <meta property="og:title" content="How do you specify the Java compiler version in a pom.xml file?">
 <meta property="og:url" content="http://kenshinn.net/2016/08/29/how-do-you-specify-the-java-compiler-version-in-a-pom-xml-file/index.html">
 <meta property="og:site_name" content="端木靖 の博客">
 <meta property="og:description" content="There are two methods setting the -source and -target of the Java Compiler:
-
-using maven plugin, you can then put:
-
+1 . using maven plugin, you can then put:
 &amp;lt;project&amp;gt;
-    ...
-    &amp;lt;build&amp;gt;
+  ...
+  &amp;lt;build&amp;gt;
     ...
     &amp;lt;plugins&amp;gt;
-       &amp;lt;plu">
-<meta property="og:updated_time" content="2016-08-29T06:05:30.000Z">
+      &amp;lt;plugin">
+<meta property="og:updated_time" content="2016-08-29T06:11:12.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="How do you specify the Java compiler version in a pom.xml file?">
 <meta name="twitter:description" content="There are two methods setting the -source and -target of the Java Compiler:
-
-using maven plugin, you can then put:
-
+1 . using maven plugin, you can then put:
 &amp;lt;project&amp;gt;
-    ...
-    &amp;lt;build&amp;gt;
+  ...
+  &amp;lt;build&amp;gt;
     ...
     &amp;lt;plugins&amp;gt;
-       &amp;lt;plu">
+      &amp;lt;plugin">
 
 
 
@@ -336,31 +330,27 @@ using maven plugin, you can then put:
 
       
         <p>There are two methods setting the -source and -target of the Java Compiler:</p>
-<ol>
-<li>using maven plugin, you can then put:</li>
-</ol>
+<p>1 . using maven plugin, you can then put:</p>
 <pre><code>&lt;project&gt;
-    ...
-    &lt;build&gt;
+  ...
+  &lt;build&gt;
     ...
     &lt;plugins&gt;
-       &lt;plugin&gt;
-          &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
-          &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
-          &lt;version&gt;3.5.1&lt;/version&gt;
-          &lt;configuration&gt;
-             &lt;source&gt;1.8&lt;/source&gt;
-             &lt;target&gt;1.8&lt;/target&gt;
-          &lt;/configuration&gt;
-         &lt;/plugin&gt;
+      &lt;plugin&gt;
+        &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+        &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
+        &lt;version&gt;3.5.1&lt;/version&gt;
+        &lt;configuration&gt;
+           &lt;source&gt;1.8&lt;/source&gt;
+           &lt;target&gt;1.8&lt;/target&gt;
+        &lt;/configuration&gt;
+      &lt;/plugin&gt;
    &lt;/plugins&gt;
    ...
-   &lt;/build&gt;
-   ...
+ &lt;/build&gt;
+ ...
 &lt;/project&gt;
-</code></pre><ol>
-<li>using properties, you can then put:</li>
-</ol>
+</code></pre><p>2 . using properties, you can then put:</p>
 <pre><code>&lt;properties&gt;
       &lt;maven.compiler.source&gt;1.8&lt;/maven.compiler.source&gt;
       &lt;maven.compiler.target&gt;1.8&lt;/maven.compiler.target&gt;

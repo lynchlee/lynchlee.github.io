@@ -315,31 +315,27 @@
         
           
             <p>There are two methods setting the -source and -target of the Java Compiler:</p>
-<ol>
-<li>using maven plugin, you can then put:</li>
-</ol>
+<p>1 . using maven plugin, you can then put:</p>
 <pre><code>&lt;project&gt;
-    ...
-    &lt;build&gt;
+  ...
+  &lt;build&gt;
     ...
     &lt;plugins&gt;
-       &lt;plugin&gt;
-          &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
-          &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
-          &lt;version&gt;3.5.1&lt;/version&gt;
-          &lt;configuration&gt;
-             &lt;source&gt;1.8&lt;/source&gt;
-             &lt;target&gt;1.8&lt;/target&gt;
-          &lt;/configuration&gt;
-         &lt;/plugin&gt;
+      &lt;plugin&gt;
+        &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+        &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
+        &lt;version&gt;3.5.1&lt;/version&gt;
+        &lt;configuration&gt;
+           &lt;source&gt;1.8&lt;/source&gt;
+           &lt;target&gt;1.8&lt;/target&gt;
+        &lt;/configuration&gt;
+      &lt;/plugin&gt;
    &lt;/plugins&gt;
    ...
-   &lt;/build&gt;
-   ...
+ &lt;/build&gt;
+ ...
 &lt;/project&gt;
-</code></pre><ol>
-<li>using properties, you can then put:</li>
-</ol>
+</code></pre><p>2 . using properties, you can then put:</p>
 <pre><code>&lt;properties&gt;
       &lt;maven.compiler.source&gt;1.8&lt;/maven.compiler.source&gt;
       &lt;maven.compiler.target&gt;1.8&lt;/maven.compiler.target&gt;
