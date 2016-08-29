@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Cassandra," />
+  <meta name="keywords" content="Hexo, NexT" />
 
 
 
@@ -84,18 +84,15 @@
 
 
 
-<meta name="description" content="According to Brewer’s CAP theorem, it is impossible for any distributed computer system to simultaneously provide all three of Consistency, Availability and Partition Tolerance. You can’t have the thr">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Consistency Tuning In Cassandra">
-<meta property="og:url" content="http://kenshinn.net/2016/07/09/Consistency-Tuning-In-Cassandra/index.html">
+<meta name="description" content="この世は、强ければ生き、弱ければし。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="端木靖 の博客">
+<meta property="og:url" content="http://kenshinn.net/tags/maven/index.html">
 <meta property="og:site_name" content="端木靖 の博客">
-<meta property="og:description" content="According to Brewer’s CAP theorem, it is impossible for any distributed computer system to simultaneously provide all three of Consistency, Availability and Partition Tolerance. You can’t have the thr">
-<meta property="og:image" content="http://kenshinn.net/img/cap.jpg">
-<meta property="og:updated_time" content="2016-07-09T10:02:47.000Z">
+<meta property="og:description" content="この世は、强ければ生き、弱ければし。">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Consistency Tuning In Cassandra">
-<meta name="twitter:description" content="According to Brewer’s CAP theorem, it is impossible for any distributed computer system to simultaneously provide all three of Consistency, Availability and Partition Tolerance. You can’t have the thr">
-<meta name="twitter:image" content="http://kenshinn.net/img/cap.jpg">
+<meta name="twitter:title" content="端木靖 の博客">
+<meta name="twitter:description" content="この世は、强ければ生き、弱ければし。">
 
 
 
@@ -113,7 +110,7 @@
   };
 </script>
 
-  <title> Consistency Tuning In Cassandra | 端木靖 の博客 </title>
+  <title> 標籤: maven | 端木靖 の博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-hk">
@@ -134,7 +131,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left page-post-detail ">
+  <div class="container one-collumn sidebar-position-left  ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -242,182 +239,53 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-expand">
-    
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <div id="posts" class="posts-collapse">
+    <div class="collection-title">
+      <h2 >
+        maven
+        <small>標籤</small>
+      </h2>
+    </div>
 
     
-      <header class="post-header">
+      
 
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+    <header class="post-header">
+
+      <h1 class="post-title">
         
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
+            <a class="post-title-link" href="/2016/08/29/how-do-you-specify-the-java-compiler-version-in-a-pom-xml-file/" itemprop="url">
               
-                Consistency Tuning In Cassandra
+                <span itemprop="name">How do you specify the Java compiler version in a pom.xml file?</span>
               
-            
-          </h1>
+            </a>
         
+      </h1>
 
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">發表於</span>
-            <time itemprop="dateCreated" datetime="2016-07-09T17:53:01+08:00" content="2016-07-09">
-              2016-07-09
-            </time>
-          </span>
+      <div class="post-meta">
+        <time class="post-time" itemprop="dateCreated"
+              datetime="2016-08-29T13:54:04+08:00"
+              content="2016-08-29" >
+          08-29
+        </time>
+      </div>
 
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/09/Consistency-Tuning-In-Cassandra/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/09/Consistency-Tuning-In-Cassandra/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        <p>According to Brewer’s CAP theorem, it is impossible for any distributed computer system to simultaneously provide all three of Consistency, Availability and Partition Tolerance. You can’t have the three at the same time and get an acceptable latency.</p>
-<p> <img src="img/cap.jpg" alt=""></p>
-<p>Cassandra values Availability and Partitioning tolerance (AP). Trade-offs between consistency and latency are tunable in Cassandra. You can get strong consistency with Cassandra (with an increased latency).</p>
-<p>Cassandra extends the concept of eventual consistency. Eventual consistency implies the storage system guarantees that if no new updates are made to the object, eventually all accesses will return the last updated value.</p>
-<p>How does C* know which record in the cluster is the latest one?</p>
-<a id="more"></a>
-<p>Each Column Family is composed of rows of row metadata and columns. A Column is the smallest increment of data in Cassandra. It is a tuple containing a name, a value and a timestamp. Cassandra uses the column timestamp to determine the most recent update to a column. The timestamp is provided by the client application. The latest timestamp always wins when requesting data, so if multiple client sessions update the same columns in a row concurrently, the most recent update is the one that will eventually persist.</p>
-<p>C* provides tunable consistency by allowing to set the replication factor, replica placement strategy and consistency level.</p>
-<p>Replication factor</p>
-<p>Replication factor is total number of replicas across the cluster. So, a replication factor of 2 implies that there are two copies of each row and each copy is on a different node. All replicas are equally important; there is no primary or master replica.</p>
-<p>As a general rule, the replication factor should not exceed the number of nodes in the cluster. However, you can increase the replication factor and then add the desired number of nodes afterwards.</p>
-<p>When replication factor exceeds the number of nodes, writes are rejected, but reads are served as long as the desired consistency level can be met.</p>
-<p>Consistency level</p>
-<p>Consistency level is used to decide the number and location of nodes to which a write must be written to the commit log and memory table of. In case of read, Consistency level is used to decide the number and location of nodes whose responses must be compared for fetching the most recent record.</p>
-<p>The Consistency Levels in C* are ONE, TWO, THREE, QUORUM, LOCAL_QUORUM, EACH_QUORUM, ALL, ANY.</p>
-<pre><code>ONE, TWO and THREE imply the number each represents.
-
-QUORUM =&gt;  a quorum of replica nodes
-
-LOCAL_QUORUM =&gt; a quorum of replica nodes in the same data center as the coordinator node.
-
-EACH_QUORUM =&gt; a quorum of replica nodes in all data centers.
-
-ALL =&gt; all replica nodes in the cluster
-
-ANY =&gt; at least one nodes in the cluster
-</code></pre><p>The size of the quorum is calculated as (replication_factor / 2) + 1</p>
-<p>Selecting a Consistency Level</p>
-<p>Consistency level “ANY” should only be used where the absolute requirement is that a write never fails. This consistency level has the highest probability of a read not returning the latest written values.</p>
-<p>For write operations, ANY is the lowest consistency (but highest availability), and ALL is the highest consistency (but lowest availability).</p>
-<p>For read operations, ONE is the lowest consistency (but highest availability), and ALL is the highest consistency (but lowest availability).</p>
-<p>QUORUM is a good middle-ground ensuring strong consistency, yet still tolerating some level of failure.</p>
-<p>In multi data center clusters,  contacting multiple data centers for a read or write request can slow down the response. The consistency level LOCAL_QUORUM is specifically designed for doing quorum reads and writes in multi data center clusters.</p>
-
-      
-    </div>
-
-    <div>
-      
-        
-      
-    </div>
-
-    <div>
-      
-        
-
-      
-    </div>
-
-    <footer class="post-footer">
-      
-        <div class="post-tags">
-          
-            <a href="/tags/Cassandra/" rel="tag">#Cassandra</a>
-          
-        </div>
-      
-
-      
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2016/07/08/cassandra-query-using-composite-keys/" rel="next" title="Query using composite keys, other than Row Key in Cassandra">
-                <i class="fa fa-chevron-left"></i> Query using composite keys, other than Row Key in Cassandra
-              </a>
-            
-          </div>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/07/09/An-introduction-to-Cassandra/" rel="prev" title="An introduction to Cassandra">
-                An introduction to Cassandra <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
-      
-
-      
-      
-    </footer>
+    </header>
   </article>
 
 
-
-    <div class="post-spread">
-      
-    </div>
+    
   </div>
+
+  
 
 
           </div>
           
 
-  <p>热评文章</p>
-  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
-
 
           
-  <div class="comments" id="comments">
-    
-      <div class="ds-thread" data-thread-key="2016/07/09/Consistency-Tuning-In-Cassandra/"
-           data-title="Consistency Tuning In Cassandra" data-url="http://kenshinn.net/2016/07/09/Consistency-Tuning-In-Cassandra/">
-      </div>
-    
-  </div>
-
 
         </div>
         
@@ -437,17 +305,8 @@ ANY =&gt; at least one nodes in the cluster
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            文章目錄
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            本站概覽
-          </li>
-        </ul>
-      
 
-      <section class="site-overview sidebar-panel ">
+      <section class="site-overview sidebar-panel  sidebar-panel-active ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.png"
@@ -548,17 +407,6 @@ ANY =&gt; at least one nodes in the cluster
       </section>
 
       
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-            
-              
-            
-            
-              <p class="post-toc-empty">此文章未包含目錄</p>
-            
-          </div>
-        </section>
-      
 
     </div>
   </aside>
@@ -654,10 +502,6 @@ ANY =&gt; at least one nodes in the cluster
   
 
   
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
-
-
 
   
 

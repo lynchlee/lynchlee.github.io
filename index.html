@@ -263,6 +263,122 @@
             
               
                 
+                <a class="post-title-link" href="/2016/08/29/how-do-you-specify-the-java-compiler-version-in-a-pom-xml-file/" itemprop="url">
+                  How do you specify the Java compiler version in a pom.xml file?
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">發表於</span>
+            <time itemprop="dateCreated" datetime="2016-08-29T13:54:04+08:00" content="2016-08-29">
+              2016-08-29
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/08/29/how-do-you-specify-the-java-compiler-version-in-a-pom-xml-file/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/29/how-do-you-specify-the-java-compiler-version-in-a-pom-xml-file/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>Setting the -source and -target of the Java Compiler</p>
+<ul>
+<li><ol>
+<li><p>using maven plugin, you can then put:</p>
+<project><br>   […]<br>   <build><br>       […]<br>     <plugins><br>           <plugin><br>             <groupid>org.apache.maven.plugins</groupid><br>             <artifactid>maven-compiler-plugin</artifactid><br>             <version>3.5.1</version><br>             <configuration><br>   <strong>   <source>1.8</strong><br>   <strong>   <target>1.8</target></strong><br>             </configuration><br>          </plugin><br>          </plugins><br>       […]<br>   </build><br>   […]<br></project>
+</li>
+</ol>
+</li>
+<li><ol>
+<li><p>using properties, you can then put:</p>
+<properties><br>    <maven.compiler.source>1.8</maven.compiler.source><br>    <maven.compiler.target>1.8</maven.compiler.target><br></properties>
+
+</li>
+</ol>
+</li>
+</ul>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/08/19/work-not/" itemprop="url">
                   事
                 </a>
@@ -1669,114 +1785,6 @@ RowKey: mevivs
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/09/An-introduction-to-Cassandra/" itemprop="url">
-                  An introduction to Cassandra
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">發表於</span>
-            <time itemprop="dateCreated" datetime="2016-07-09T17:56:37+08:00" content="2016-07-09">
-              2016-07-09
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/09/An-introduction-to-Cassandra/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/09/An-introduction-to-Cassandra/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h4 id="NoSQL-Movement"><a href="#NoSQL-Movement" class="headerlink" title="NoSQL Movement"></a>NoSQL Movement</h4><p>To deal with the increase in concurrent users (Big Users) and the amount of data (Big Data), applications and their underlying databases need to scale using one of two choices: scale up or scale out. Scaling up implies a centralized approach that relies on bigger and bigger servers. Scaling out implies a distributed approach that leverages many standard, commodity physical or virtual servers.</p>
-<p>Prior to NoSQL databases, the default approach was to scale up. This was dictated by the fundamentally centralized, shared-everything architecture of relational database technology. To support more concurrent users and/or store more data, we need a bigger and bigger server with more CPUs, more memory, and more disk storage to keep all the tables.</p>
-<p>NoSQL databases were developed from the ground up to be distributed, scale out databases. They use a cluster of standard, physical or virtual servers to store data and support database operations. To scale, additional servers are joined to the cluster and the data and database operations are spread across the larger cluster.</p>
-<p>NoSQL databases provide a much easier, linear approach to database scaling at low cost of commodity servers. If 10,000 new users start using your application, simply add another database server to your cluster. Add ten thousand more users and add another server. There’s no need to modify the application as you scale since the application always sees a single (distributed) database. Since commodity servers are expected to fail from time-to-time, NoSQL databases are built to tolerate and recover from such failure making them highly reliable.</p>
-<p>NoSQL database is defined as Next Generation Databases mostly addressing some of the points: being non-relational, distributed, open-source and horizontally scalable</p>
-<p>There are around 150 NoSQL systems available at present in the market. Each One comes with its own merits and demerits. This post briefly talks about Cassandra and it’s core features.</p>
-          <div class="post-more-link text-center">
-            <a class="btn" href="/2016/07/09/An-introduction-to-Cassandra/#more" rel="contents">
-              閱讀全文 &raquo;
-            </a>
-          </div>
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1822,7 +1830,7 @@ RowKey: mevivs
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">32</span>
+              <span class="site-state-item-count">33</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
@@ -1839,7 +1847,7 @@ RowKey: mevivs
           
             <div class="site-state-item site-state-tags">
               
-                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-count">26</span>
                 <span class="site-state-item-name">標籤</span>
               
             </div>

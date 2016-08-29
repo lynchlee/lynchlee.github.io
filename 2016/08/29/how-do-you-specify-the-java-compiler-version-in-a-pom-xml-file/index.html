@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Cassandra," />
+  <meta name="keywords" content="maven," />
 
 
 
@@ -84,18 +84,28 @@
 
 
 
-<meta name="description" content="According to Brewer’s CAP theorem, it is impossible for any distributed computer system to simultaneously provide all three of Consistency, Availability and Partition Tolerance. You can’t have the thr">
+<meta name="description" content="Setting the -source and -target of the Java Compiler
+
+
+using maven plugin, you can then put:
+   […]          […]                             org.apache.maven.plugins             maven-compiler-plugin">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Consistency Tuning In Cassandra">
-<meta property="og:url" content="http://kenshinn.net/2016/07/09/Consistency-Tuning-In-Cassandra/index.html">
+<meta property="og:title" content="How do you specify the Java compiler version in a pom.xml file?">
+<meta property="og:url" content="http://kenshinn.net/2016/08/29/how-do-you-specify-the-java-compiler-version-in-a-pom-xml-file/index.html">
 <meta property="og:site_name" content="端木靖 の博客">
-<meta property="og:description" content="According to Brewer’s CAP theorem, it is impossible for any distributed computer system to simultaneously provide all three of Consistency, Availability and Partition Tolerance. You can’t have the thr">
-<meta property="og:image" content="http://kenshinn.net/img/cap.jpg">
-<meta property="og:updated_time" content="2016-07-09T10:02:47.000Z">
+<meta property="og:description" content="Setting the -source and -target of the Java Compiler
+
+
+using maven plugin, you can then put:
+   […]          […]                             org.apache.maven.plugins             maven-compiler-plugin">
+<meta property="og:updated_time" content="2016-08-29T05:59:11.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Consistency Tuning In Cassandra">
-<meta name="twitter:description" content="According to Brewer’s CAP theorem, it is impossible for any distributed computer system to simultaneously provide all three of Consistency, Availability and Partition Tolerance. You can’t have the thr">
-<meta name="twitter:image" content="http://kenshinn.net/img/cap.jpg">
+<meta name="twitter:title" content="How do you specify the Java compiler version in a pom.xml file?">
+<meta name="twitter:description" content="Setting the -source and -target of the Java Compiler
+
+
+using maven plugin, you can then put:
+   […]          […]                             org.apache.maven.plugins             maven-compiler-plugin">
 
 
 
@@ -113,7 +123,7 @@
   };
 </script>
 
-  <title> Consistency Tuning In Cassandra | 端木靖 の博客 </title>
+  <title> How do you specify the Java compiler version in a pom.xml file? | 端木靖 の博客 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-hk">
@@ -263,7 +273,7 @@
             
             
               
-                Consistency Tuning In Cassandra
+                How do you specify the Java compiler version in a pom.xml file?
               
             
           </h1>
@@ -275,8 +285,8 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">發表於</span>
-            <time itemprop="dateCreated" datetime="2016-07-09T17:53:01+08:00" content="2016-07-09">
-              2016-07-09
+            <time itemprop="dateCreated" datetime="2016-08-29T13:54:04+08:00" content="2016-08-29">
+              2016-08-29
             </time>
           </span>
 
@@ -286,8 +296,8 @@
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/07/09/Consistency-Tuning-In-Cassandra/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/09/Consistency-Tuning-In-Cassandra/" itemprop="commentsCount"></span>
+                <a href="/2016/08/29/how-do-you-specify-the-java-compiler-version-in-a-pom-xml-file/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/08/29/how-do-you-specify-the-java-compiler-version-in-a-pom-xml-file/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -310,39 +320,22 @@
       
 
       
-        <p>According to Brewer’s CAP theorem, it is impossible for any distributed computer system to simultaneously provide all three of Consistency, Availability and Partition Tolerance. You can’t have the three at the same time and get an acceptable latency.</p>
-<p> <img src="img/cap.jpg" alt=""></p>
-<p>Cassandra values Availability and Partitioning tolerance (AP). Trade-offs between consistency and latency are tunable in Cassandra. You can get strong consistency with Cassandra (with an increased latency).</p>
-<p>Cassandra extends the concept of eventual consistency. Eventual consistency implies the storage system guarantees that if no new updates are made to the object, eventually all accesses will return the last updated value.</p>
-<p>How does C* know which record in the cluster is the latest one?</p>
-<a id="more"></a>
-<p>Each Column Family is composed of rows of row metadata and columns. A Column is the smallest increment of data in Cassandra. It is a tuple containing a name, a value and a timestamp. Cassandra uses the column timestamp to determine the most recent update to a column. The timestamp is provided by the client application. The latest timestamp always wins when requesting data, so if multiple client sessions update the same columns in a row concurrently, the most recent update is the one that will eventually persist.</p>
-<p>C* provides tunable consistency by allowing to set the replication factor, replica placement strategy and consistency level.</p>
-<p>Replication factor</p>
-<p>Replication factor is total number of replicas across the cluster. So, a replication factor of 2 implies that there are two copies of each row and each copy is on a different node. All replicas are equally important; there is no primary or master replica.</p>
-<p>As a general rule, the replication factor should not exceed the number of nodes in the cluster. However, you can increase the replication factor and then add the desired number of nodes afterwards.</p>
-<p>When replication factor exceeds the number of nodes, writes are rejected, but reads are served as long as the desired consistency level can be met.</p>
-<p>Consistency level</p>
-<p>Consistency level is used to decide the number and location of nodes to which a write must be written to the commit log and memory table of. In case of read, Consistency level is used to decide the number and location of nodes whose responses must be compared for fetching the most recent record.</p>
-<p>The Consistency Levels in C* are ONE, TWO, THREE, QUORUM, LOCAL_QUORUM, EACH_QUORUM, ALL, ANY.</p>
-<pre><code>ONE, TWO and THREE imply the number each represents.
+        <p>Setting the -source and -target of the Java Compiler</p>
+<ul>
+<li><ol>
+<li><p>using maven plugin, you can then put:</p>
+<project><br>   […]<br>   <build><br>       […]<br>     <plugins><br>           <plugin><br>             <groupid>org.apache.maven.plugins</groupid><br>             <artifactid>maven-compiler-plugin</artifactid><br>             <version>3.5.1</version><br>             <configuration><br>   <strong>   <source>1.8</strong><br>   <strong>   <target>1.8</target></strong><br>             </configuration><br>          </plugin><br>          </plugins><br>       […]<br>   </build><br>   […]<br></project>
+</li>
+</ol>
+</li>
+<li><ol>
+<li><p>using properties, you can then put:</p>
+<properties><br>    <maven.compiler.source>1.8</maven.compiler.source><br>    <maven.compiler.target>1.8</maven.compiler.target><br></properties>
 
-QUORUM =&gt;  a quorum of replica nodes
-
-LOCAL_QUORUM =&gt; a quorum of replica nodes in the same data center as the coordinator node.
-
-EACH_QUORUM =&gt; a quorum of replica nodes in all data centers.
-
-ALL =&gt; all replica nodes in the cluster
-
-ANY =&gt; at least one nodes in the cluster
-</code></pre><p>The size of the quorum is calculated as (replication_factor / 2) + 1</p>
-<p>Selecting a Consistency Level</p>
-<p>Consistency level “ANY” should only be used where the absolute requirement is that a write never fails. This consistency level has the highest probability of a read not returning the latest written values.</p>
-<p>For write operations, ANY is the lowest consistency (but highest availability), and ALL is the highest consistency (but lowest availability).</p>
-<p>For read operations, ONE is the lowest consistency (but highest availability), and ALL is the highest consistency (but lowest availability).</p>
-<p>QUORUM is a good middle-ground ensuring strong consistency, yet still tolerating some level of failure.</p>
-<p>In multi data center clusters,  contacting multiple data centers for a read or write request can slow down the response. The consistency level LOCAL_QUORUM is specifically designed for doing quorum reads and writes in multi data center clusters.</p>
+</li>
+</ol>
+</li>
+</ul>
 
       
     </div>
@@ -364,7 +357,7 @@ ANY =&gt; at least one nodes in the cluster
       
         <div class="post-tags">
           
-            <a href="/tags/Cassandra/" rel="tag">#Cassandra</a>
+            <a href="/tags/maven/" rel="tag">#maven</a>
           
         </div>
       
@@ -373,17 +366,13 @@ ANY =&gt; at least one nodes in the cluster
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/07/08/cassandra-query-using-composite-keys/" rel="next" title="Query using composite keys, other than Row Key in Cassandra">
-                <i class="fa fa-chevron-left"></i> Query using composite keys, other than Row Key in Cassandra
+              <a href="/2016/08/19/work-not/" rel="next" title="事">
+                <i class="fa fa-chevron-left"></i> 事
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/07/09/An-introduction-to-Cassandra/" rel="prev" title="An introduction to Cassandra">
-                An introduction to Cassandra <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -412,8 +401,8 @@ ANY =&gt; at least one nodes in the cluster
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/07/09/Consistency-Tuning-In-Cassandra/"
-           data-title="Consistency Tuning In Cassandra" data-url="http://kenshinn.net/2016/07/09/Consistency-Tuning-In-Cassandra/">
+      <div class="ds-thread" data-thread-key="2016/08/29/how-do-you-specify-the-java-compiler-version-in-a-pom-xml-file/"
+           data-title="How do you specify the Java compiler version in a pom.xml file?" data-url="http://kenshinn.net/2016/08/29/how-do-you-specify-the-java-compiler-version-in-a-pom-xml-file/">
       </div>
     
   </div>
