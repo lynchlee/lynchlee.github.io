@@ -94,7 +94,7 @@
 <meta property="og:description" content="Timeout during the first connection:
 2015-11-22 21:58:32,870 ERROR [stderr] (Thread-7) com.datastax.driver.core.ConnectionException: [/x.x.x.x:9042] Timeout while setting keyspace on connection
 2015-1">
-<meta property="og:updated_time" content="2016-09-08T04:35:34.000Z">
+<meta property="og:updated_time" content="2016-09-08T11:37:47.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Cassandra Issue - Timeout while setting keyspace on connection">
 <meta name="twitter:description" content="Timeout during the first connection:
@@ -327,6 +327,13 @@
 </code></pre><p>After after the reconnect, works. :/</p>
 <p>Reason:</p>
 <p>this happens while setting the keyspace on a new connection: if your session is tied to a particular keyspace (either by using cluster.connect(String) or issuing a USE statement later), any time a new connection is opened, the first request to use this connection will first send a “USE ks” query to switch to the keyspace.<br>What you see here is that “USE ks” statement timing out, i.e. the server takes longer than SocketOptions#getReadTimeoutMillis to reply. That’s surprising because a USE statement is normally very fast to execute, so it could indicate a server or network issue. Do you see anything in the Cassandra logs?</p>
+<p>More, While faced this type of issue, maybe, we should think about:</p>
+<p>Have we customized any of the following:</p>
+<ul>
+<li>SocketOptions.setReadTimeoutMillis() on the driver side?</li>
+<li>*_timeout_in_ms in cassandra.yaml?</li>
+<li>Do us have statements that use IN queries with a large number of partition keys?</li>
+</ul>
 
       
     </div>
