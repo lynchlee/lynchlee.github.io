@@ -68,7 +68,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Cassandra," />
 
 
 
@@ -84,15 +84,22 @@
 
 
 
-<meta name="description" content="この世は、强ければ生き、弱ければし。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="靖 のブログ">
-<meta property="og:url" content="http://kenshinn.net/tags/Latency/index.html">
+<meta name="description" content="Timeout during the first connection:
+2015-11-22 21:58:32,870 ERROR [stderr] (Thread-7) com.datastax.driver.core.ConnectionException: [/x.x.x.x:9042] Timeout while setting keyspace on connection
+2015-1">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Cassandra Issue - Timeout while setting keyspace on connection">
+<meta property="og:url" content="http://kenshinn.net/2016/09/08/cassandra-issue-timeout/index.html">
 <meta property="og:site_name" content="靖 のブログ">
-<meta property="og:description" content="この世は、强ければ生き、弱ければし。">
+<meta property="og:description" content="Timeout during the first connection:
+2015-11-22 21:58:32,870 ERROR [stderr] (Thread-7) com.datastax.driver.core.ConnectionException: [/x.x.x.x:9042] Timeout while setting keyspace on connection
+2015-1">
+<meta property="og:updated_time" content="2016-09-08T04:35:34.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="靖 のブログ">
-<meta name="twitter:description" content="この世は、强ければ生き、弱ければし。">
+<meta name="twitter:title" content="Cassandra Issue - Timeout while setting keyspace on connection">
+<meta name="twitter:description" content="Timeout during the first connection:
+2015-11-22 21:58:32,870 ERROR [stderr] (Thread-7) com.datastax.driver.core.ConnectionException: [/x.x.x.x:9042] Timeout while setting keyspace on connection
+2015-1">
 
 
 
@@ -110,7 +117,7 @@
   };
 </script>
 
-  <title> 標籤: Latency | 靖 のブログ </title>
+  <title> Cassandra Issue - Timeout while setting keyspace on connection | 靖 のブログ </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-hk">
@@ -131,7 +138,7 @@
     
   
 
-  <div class="container one-collumn sidebar-position-left  ">
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -239,53 +246,158 @@
           <div id="content" class="content">
             
 
-  <div id="posts" class="posts-collapse">
-    <div class="collection-title">
-      <h2 >
-        Latency
-        <small>標籤</small>
-      </h2>
-    </div>
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
 
     
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Cassandra Issue - Timeout while setting keyspace on connection
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">發表於</span>
+            <time itemprop="dateCreated" datetime="2016-09-08T12:31:56+08:00" content="2016-09-08">
+              2016-09-08
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/09/08/cassandra-issue-timeout/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/08/cassandra-issue-timeout/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
       
 
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+      
+        <p>Timeout during the first connection:</p>
+<pre><code>2015-11-22 21:58:32,870 ERROR [stderr] (Thread-7) com.datastax.driver.core.ConnectionException: [/x.x.x.x:9042] Timeout while setting keyspace on connection
+2015-11-22 21:58:32,870 ERROR [stderr] (Thread-7)    at com.datastax.driver.core.Connection.setKeyspace(Connection.java:451)
+2015-11-22 21:58:32,871 ERROR [stderr] (Thread-7)    at com.datastax.driver.core.HostConnectionPool.borrowConnection(HostConnectionPool.java:277)
+2015-11-22 21:58:32,871 ERROR [stderr] (Thread-7)    at com.datastax.driver.core.RequestHandler$SpeculativeExecution.query(RequestHandler.java:296)
+2015-11-22 21:58:32,871 ERROR [stderr] (Thread-7)    at com.datastax.driver.core.RequestHandler$SpeculativeExecution.sendRequest(RequestHandler.java:276)
+2015-11-22 21:58:32,871 ERROR [stderr] (Thread-7)    at com.datastax.driver.core.RequestHandler$SpeculativeExecution$1.run(RequestHandler.java:377)
+2015-11-22 21:58:32,871 ERROR [stderr] (Thread-7)    at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+2015-11-22 21:58:32,872 ERROR [stderr] (Thread-7)    at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+2015-11-22 21:58:32,872 ERROR [stderr] (Thread-7)    at java.lang.Thread.run(Thread.java:745)
+</code></pre><p>After after the reconnect, works. :/</p>
+<p>Reason:</p>
+<p>this happens while setting the keyspace on a new connection: if your session is tied to a particular keyspace (either by using cluster.connect(String) or issuing a USE statement later), any time a new connection is opened, the first request to use this connection will first send a “USE ks” query to switch to the keyspace.<br>What you see here is that “USE ks” statement timing out, i.e. the server takes longer than SocketOptions#getReadTimeoutMillis to reply. That’s surprising because a USE statement is normally very fast to execute, so it could indicate a server or network issue. Do you see anything in the Cassandra logs?</p>
 
-      <h1 class="post-title">
+      
+    </div>
+
+    <div>
+      
         
-            <a class="post-title-link" href="/2016/07/28/Every-Programmer-Should-Know-These-Latency-Numbers/" itemprop="url">
-              
-                <span itemprop="name">Every Programmer Should Know These Latency Numbers</span>
-              
-            </a>
+      
+    </div>
+
+    <div>
+      
         
-      </h1>
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2016-07-28T02:05:34+08:00"
-              content="2016-07-28" >
-          07-28
-        </time>
-      </div>
+      
+    </div>
 
-    </header>
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Cassandra/" rel="tag">#Cassandra</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/08/29/how-do-you-specify-the-java-compiler-version-in-a-pom-xml-file/" rel="next" title="How do you specify the Java compiler version in a pom.xml file?">
+                <i class="fa fa-chevron-left"></i> How do you specify the Java compiler version in a pom.xml file?
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </article>
 
 
-    
-  </div>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
           
 
+  <p>热评文章</p>
+  <div class="ds-top-threads" data-range="weekly" data-num-items="4"></div>
+
 
           
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/09/08/cassandra-issue-timeout/"
+           data-title="Cassandra Issue - Timeout while setting keyspace on connection" data-url="http://kenshinn.net/2016/09/08/cassandra-issue-timeout/">
+      </div>
+    
+  </div>
+
 
         </div>
         
@@ -305,8 +417,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目錄
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            本站概覽
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel  sidebar-panel-active ">
+      <section class="site-overview sidebar-panel ">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.png"
@@ -407,6 +528,17 @@
       </section>
 
       
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <p class="post-toc-empty">此文章未包含目錄</p>
+            
+          </div>
+        </section>
+      
 
     </div>
   </aside>
@@ -502,6 +634,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
 
   
 

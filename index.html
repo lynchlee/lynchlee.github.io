@@ -263,6 +263,119 @@
             
               
                 
+                <a class="post-title-link" href="/2016/09/08/cassandra-issue-timeout/" itemprop="url">
+                  Cassandra Issue - Timeout while setting keyspace on connection
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">發表於</span>
+            <time itemprop="dateCreated" datetime="2016-09-08T12:31:56+08:00" content="2016-09-08">
+              2016-09-08
+            </time>
+          </span>
+
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/09/08/cassandra-issue-timeout/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/09/08/cassandra-issue-timeout/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>Timeout during the first connection:</p>
+<pre><code>2015-11-22 21:58:32,870 ERROR [stderr] (Thread-7) com.datastax.driver.core.ConnectionException: [/x.x.x.x:9042] Timeout while setting keyspace on connection
+2015-11-22 21:58:32,870 ERROR [stderr] (Thread-7)    at com.datastax.driver.core.Connection.setKeyspace(Connection.java:451)
+2015-11-22 21:58:32,871 ERROR [stderr] (Thread-7)    at com.datastax.driver.core.HostConnectionPool.borrowConnection(HostConnectionPool.java:277)
+2015-11-22 21:58:32,871 ERROR [stderr] (Thread-7)    at com.datastax.driver.core.RequestHandler$SpeculativeExecution.query(RequestHandler.java:296)
+2015-11-22 21:58:32,871 ERROR [stderr] (Thread-7)    at com.datastax.driver.core.RequestHandler$SpeculativeExecution.sendRequest(RequestHandler.java:276)
+2015-11-22 21:58:32,871 ERROR [stderr] (Thread-7)    at com.datastax.driver.core.RequestHandler$SpeculativeExecution$1.run(RequestHandler.java:377)
+2015-11-22 21:58:32,871 ERROR [stderr] (Thread-7)    at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1142)
+2015-11-22 21:58:32,872 ERROR [stderr] (Thread-7)    at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)
+2015-11-22 21:58:32,872 ERROR [stderr] (Thread-7)    at java.lang.Thread.run(Thread.java:745)
+</code></pre><p>After after the reconnect, works. :/</p>
+<p>Reason:</p>
+<p>this happens while setting the keyspace on a new connection: if your session is tied to a particular keyspace (either by using cluster.connect(String) or issuing a USE statement later), any time a new connection is opened, the first request to use this connection will first send a “USE ks” query to switch to the keyspace.<br>What you see here is that “USE ks” statement timing out, i.e. the server takes longer than SocketOptions#getReadTimeoutMillis to reply. That’s surprising because a USE statement is normally very fast to execute, so it could indicate a server or network issue. Do you see anything in the Cassandra logs?</p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/08/29/how-do-you-specify-the-java-compiler-version-in-a-pom-xml-file/" itemprop="url">
                   How do you specify the Java compiler version in a pom.xml file?
                 </a>
@@ -1582,219 +1695,6 @@ return names;
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/07/09/Composite-Keys-in-Cassandra/" itemprop="url">
-                  Composite Keys in Cassandra
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">發表於</span>
-            <time itemprop="dateCreated" datetime="2016-07-09T18:22:45+08:00" content="2016-07-09">
-              2016-07-09
-            </time>
-          </span>
-
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/07/09/Composite-Keys-in-Cassandra/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/07/09/Composite-Keys-in-Cassandra/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-
-          
-          
-
-          
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h4 id="Introduction"><a href="#Introduction" class="headerlink" title="Introduction"></a>Introduction</h4><p>A composite key consists of one or more primary key fields. Each field must be of data type supported by underlying data-store.</p>
-<p>In JPA (Java Persistence API), there are two ways of specifying composite keys:</p>
-<ol>
-<li><p>Composite Primary Key:</p>
-<p> @Entity<br> @IdClass(TimelineId.class)<br> public class Timeline {</p>
-<pre><code>@Id int userId;
-@Id long tweetId;
-
-//Other non-primary key fields
-</code></pre><p> }<br> Class TimelineId {</p>
-<pre><code>int userId;
-long tweetId;
-</code></pre><p> }</p>
-</li>
-<li><p>Embedded Primary Key:</p>
-<p> @Entity<br> public class Timeline {</p>
-<pre><code>@EmbeddedId TimelineId id;
-</code></pre><p> //Other non-primary key fields<br> }</p>
-<p> @Embeddable<br> Class TimelineId {</p>
-<pre><code>int userId;
-long tweetId;
-</code></pre><p> }</p>
-</li>
-</ol>
-<p>Above Timeline entity is inspired from famous twissandra example. Starting 1.1 release, Cassandra supports composite keys.</p>
-<p>Cassandra Composite Keys in Action<br>Visit this page in order to understand Cassandra Schema in general. In this section I will give you a feel of how composite keys are stored in Cassandra.</p>
-<p>Let’s start Cassandra 1.1.x server and run following commands from Cassandra/bin directory:</p>
-<h5 id="CQL"><a href="#CQL" class="headerlink" title="CQL:"></a>CQL:</h5><pre><code>./cqlsh -3 localhost 9160
-
-CREATE KEYSPACE twissandra with strategy_class = &apos;SimpleStrategy&apos; and strategy_options:replication_factor=1;
-
-use twissandra;
-
-CREATE TABLE timeline(
-    user_id varchar,
-    tweet_id varchar,
-    tweet_device varchar,
-    author varchar,
-    body varchar,
-    PRIMARY KEY(user_id,tweet_id,tweet_device));
-
-INSERT INTO timeline (user_id, tweet_id, tweet_device, author, body) VALUES (&apos;xamry&apos;, &apos;t1&apos;, &apos;web&apos;, &apos;Amresh&apos;, &apos;Here is my first tweet&apos;);
-INSERT INTO timeline (user_id, tweet_id, tweet_device, author, body) VALUES (&apos;xamry&apos;, &apos;t2&apos;, &apos;sms&apos;, &apos;Saurabh&apos;, &apos;Howz life Xamry&apos;);
-INSERT INTO timeline (user_id, tweet_id, tweet_device, author, body) VALUES (&apos;mevivs&apos;, &apos;t1&apos;, &apos;iPad&apos;, &apos;Kuldeep&apos;, &apos;You der?&apos;);
-INSERT INTO timeline (user_id, tweet_id, tweet_device, author, body) VALUES (&apos;mevivs&apos;, &apos;t2&apos;, &apos;mobile&apos;, &apos;Vivek&apos;, &apos;Yep, I suppose&apos;);
-
-cqlsh:twissandra&gt; select * from timeline;
- user_id | tweet_id | author  | body
----------+----------+---------+------------------------
-   xamry |       t1 |  Amresh | Here is my first tweet
-   xamry |       t2 | Saurabh |        Howz life Xamry
-   mevivs |       t1 | Kuldeep |               You der?
-     mevivs |       t2 |   Vivek |         Yep, I suppose
-
-cqlsh:twissandra&gt; SELECT * FROM timeline WHERE user_id=&apos;xamry&apos;;
- user_id | tweet_id | tweet_device | author  | body
----------+----------+--------------+---------+------------------------
-   xamry |       t1 |          web |  Amresh | Here is my first tweet
-   xamry |       t2 |          sms | Saurabh |        Howz life Xamry
-
-cqlsh:twissandra&gt; select * from timeline where tweet_id = &apos;t1&apos;;
- user_id | tweet_id | tweet_device | author  | body
----------+----------+--------------+---------+------------------------
-   xamry |       t1 |          web |  Amresh | Here is my first tweet
-  mevivs |       t1 |         iPad | Kuldeep |               You der?
-
-cqlsh:twissandra&gt; select * from timeline where user_id = &apos;xamry&apos; and tweet_id=&apos;t1&apos;;
- user_id | tweet_id | tweet_device | author | body
----------+----------+--------------+--------+------------------------
-   xamry |       t1 |          web | Amresh | Here is my first tweet
-
-cqlsh:twissandra&gt; select * from timeline where user_id = &apos;xamry&apos; and author=&apos;Amresh&apos;;
-Bad Request: No indexed columns present in by-columns clause with Equal operator
-
-cqlsh:twissandra&gt; select * from timeline where user_id = &apos;xamry&apos; and tweet_device=&apos;web&apos;;
-Bad Request: PRIMARY KEY part tweet_device cannot be restricted (preceding part tweet_id is either not restricted or by a non-EQ relation)
-
-cqlsh:twissandra&gt; select * from timeline where user_id = &apos;xamry&apos; and tweet_id = &apos;t1&apos; and tweet_device=&apos;web&apos;;
- user_id | tweet_id | tweet_device | author | body
----------+----------+--------------+--------+------------------------
-   xamry |       t1 |          web | Amresh | Here is my first tweet
-</code></pre><h5 id="Cassandra-cli"><a href="#Cassandra-cli" class="headerlink" title="Cassandra-cli:"></a>Cassandra-cli:</h5><pre><code>impadmin@impetus-ubuntu:/usr/local/apache-cassandra-1.1.2/bin$ ./cassandra-cli -h localhost -p 9160
-Connected to: &quot;Test Cluster&quot; on localhost/9160
-Welcome to Cassandra CLI version 1.1.2
-
-Type &apos;help;&apos; or &apos;?&apos; for help.
-Type &apos;quit;&apos; or &apos;exit;&apos; to quit.
-
-[default@unknown] use twissandra;
-Authenticated to keyspace: twissandra
-[default@twissandra] list timeline;
-&lt;pre&gt;Using default limit of 100
-Using default column limit of 100
--------------------
-RowKey: xamry
-=&gt; (column=t1:web:author, value=Amresh, timestamp=1343729388951000)
-=&gt; (column=t1:web:body, value=Here is my first tweet, timestamp=1343729388951001)
-=&gt; (column=t2:sms:author, value=Saurabh, timestamp=1343729388973000)
-=&gt; (column=t2:sms:body, value=Howz life Xamry, timestamp=1343729388973001)
--------------------
-RowKey: mevivs
-=&gt; (column=t1:iPad:author, value=Kuldeep, timestamp=1343729388991000)
-=&gt; (column=t1:iPad:body, value=You der?, timestamp=1343729388991001)
-=&gt; (column=t2:mobile:author, value=Vivek, timestamp=1343729389941000)
-=&gt; (column=t2:mobile:body, value=Yep, I suppose, timestamp=1343729389941001)
-</code></pre><h4 id="Observations"><a href="#Observations" class="headerlink" title="Observations"></a>Observations</h4><ol>
-<li><p>First part of composite key (user_id) is called “Partition Key”, rest (tweet_id, tweet_device) are remaining keys.</p>
-</li>
-<li><p>Cassandra stores columns differently when composite keys are used. Partition key becomes row key. Remaining keys are concatenated with each column name  (“:” as separator) to form column names. Column values remain unchanged.</p>
-</li>
-<li><p>Remaining keys (other than partition keys) are ordered, and it’s not allowed to search on any random column, you have to start with the first one and then you can move to the second one and so on. This is evident from “Bad Request” error.</p>
-</li>
-</ol>
-
-          
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1840,7 +1740,7 @@ RowKey: mevivs
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/">
-              <span class="site-state-item-count">33</span>
+              <span class="site-state-item-count">34</span>
               <span class="site-state-item-name">文章</span>
             </a>
           </div>
